@@ -126,6 +126,9 @@ export interface AppSettings {
   showKeyboard: boolean;
   showFingerGuide: boolean;
   soundEnabled: boolean;
+  bgmEnabled: boolean;
+  bgmTrack: 1 | 2 | 3 | 4;
+  bgmVolume: number;  // 0.0 - 1.0
   fontSize: 'sm' | 'md' | 'lg';
   theme: 'light' | 'dark' | 'blue';
   romajiGuide: 'always' | 'fadein' | 'never';  // show romaji hint

@@ -3,9 +3,11 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { AppSettings } from '@/types';
 import { loadSettings, saveSettings, clearAllData } from '@/lib/storage';
-import { DEFAULT_SETTINGS } from '@/lib/constants';
+import { DEFAULT_SETTINGS, BGM_TRACKS } from '@/lib/constants';
+import { useBgm, startBgm, stopBgm } from '@/hooks/useBgm';
 
 export default function SettingsPage() {
+  useBgm();
   const router = useRouter();
   const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -19,6 +21,13 @@ export default function SettingsPage() {
     saveSettings(updated);
     setSaved(true);
     setTimeout(() => setSaved(false), 1500);
+    // BGM リアルタイム制御
+    if (key === 'bgmEnabled') {
+      if (value) startBgm(); else stopBgm();
+    }
+    if (key === 'bgmTrack' || key === 'bgmVolume') {
+      startBgm();
+    }
     if (key === 'theme') {
       if (value === 'dark') document.documentElement.classList.add('dark');
       else document.documentElement.classList.remove('dark');
@@ -116,32 +125,65 @@ export default function SettingsPage() {
         <section>
           <div className="flex items-center gap-3 mb-5">
             <span className="material-symbols-outlined text-tertiary">volume_up</span>
-            <h2 className="font-headline text-xl font-bold text-on-surface">Audio Settings</h2>
+            <h2 className="font-headline text-xl font-bold text-on-surface">サウンド設定</h2>
           </div>
           <div className="glass-card rounded-lg border border-[#464555]/10 divide-y divide-[#464555]/10 overflow-hidden">
             <ToggleRow
               icon="music_note"
-              label="Enable All Audio"
-              desc="Master switch for all in-app sounds and music"
+              label="効果音"
+              desc="タイピング音・結果効果音のマスタースイッチ"
               value={settings.soundEnabled}
               onChange={v => update('soundEnabled', v)}
-            />
-            <ToggleRow
-              icon="keyboard"
-              label="Typing Sounds"
-              desc="Mechanical switch feedback on every keystroke"
-              value={settings.soundEnabled}
-              onChange={v => update('soundEnabled', v)}
-              disabled={!settings.soundEnabled}
             />
             <ToggleRow
               icon="radio"
-              label="Background Music (BGM)"
-              desc="Lo-fi ambient tracks for deep focus"
-              value={false}
-              onChange={() => {}}
-              disabled={!settings.soundEnabled}
+              label="BGM"
+              desc="ダッシュボード・レッスン一覧などで流れるLoFi BGM"
+              value={settings.bgmEnabled ?? false}
+              onChange={v => update('bgmEnabled', v)}
             />
+            {/* BGM track selector */}
+            {settings.bgmEnabled && (
+              <div className="p-5 space-y-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center flex-shrink-0">
+                    <span className="material-symbols-outlined text-sm">queue_music</span>
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="font-headline font-medium text-on-surface mb-3">BGM曲選択</h4>
+                    <div className="flex gap-2 flex-wrap">
+                      {BGM_TRACKS.map(track => (
+                        <button
+                          key={track.id}
+                          onClick={() => update('bgmTrack', track.id)}
+                          className={`px-4 py-2 rounded-full font-label text-xs font-medium transition-all ${
+                            (settings.bgmTrack ?? 1) === track.id
+                              ? 'bg-primary text-white shadow-sm'
+                              : 'bg-surface-container-highest text-on-surface-variant hover:bg-surface-container-high'
+                          }`}
+                        >
+                          {track.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                {/* Volume slider */}
+                <div className="flex items-center gap-4 pl-14">
+                  <span className="material-symbols-outlined text-sm text-on-surface-variant">volume_down</span>
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.05"
+                    value={settings.bgmVolume ?? 0.35}
+                    onChange={e => update('bgmVolume', parseFloat(e.target.value))}
+                    className="flex-1 accent-primary"
+                  />
+                  <span className="material-symbols-outlined text-sm text-on-surface-variant">volume_up</span>
+                </div>
+              </div>
+            )}
           </div>
         </section>
 

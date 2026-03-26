@@ -4,6 +4,7 @@ import { LESSONS, getUnitIds, getLessonsByUnit } from '@/data/lessons';
 import { loadProgress } from '@/lib/storage';
 import type { UserProgress } from '@/types';
 import { UnitSection } from '@/components/dashboard/UnitSection';
+import { useBgm } from '@/hooks/useBgm';
 
 const UNIT_TITLES: Record<string, string> = {
   'unit-0':  'Unit 0: ホームポジション',
@@ -30,6 +31,7 @@ const UNIT_TITLES: Record<string, string> = {
 };
 
 export default function LessonsPage() {
+  useBgm();
   const [progress, setProgress] = useState<UserProgress | null>(null);
   const [expandedUnits, setExpandedUnits] = useState<Set<string>>(new Set());
 

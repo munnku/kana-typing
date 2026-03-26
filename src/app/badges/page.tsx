@@ -3,8 +3,10 @@ import { useEffect, useState } from 'react';
 import { loadProgress } from '@/lib/storage';
 import { BADGE_DEFINITIONS } from '@/lib/constants';
 import { cn } from '@/lib/cn';
+import { useBgm } from '@/hooks/useBgm';
 
 export default function BadgesPage() {
+  useBgm();
   const [earnedIds, setEarnedIds] = useState<string[]>([]);
 
   useEffect(() => {

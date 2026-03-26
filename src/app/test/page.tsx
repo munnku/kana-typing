@@ -8,6 +8,7 @@ import { buildTestText } from '@/data/testTexts';
 import { saveTestResult, loadTestResults, loadSettings } from '@/lib/storage';
 import { computeKpm, computeAccuracy } from '@/lib/metrics';
 import { TypingScreen } from '@/components/shared/TypingScreen';
+import { useBgmStop } from '@/hooks/useBgm';
 import type { DisplayChar } from '@/types';
 
 const TestHistoryChart = dynamic(
@@ -60,6 +61,7 @@ function buildLines(chars: DisplayChar[]): LineRange[] {
 }
 
 export default function TestPage() {
+  useBgmStop();
   const router = useRouter();
   const [duration, setDuration] = useState<Duration>(60);
   const [status, setStatus] = useState<'idle' | 'active' | 'done'>('idle');

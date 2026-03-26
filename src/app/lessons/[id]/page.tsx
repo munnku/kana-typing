@@ -6,6 +6,7 @@ import { LESSONS_BY_ID, getNextLesson } from '@/data/lessons';
 import { useTypingEngine } from '@/hooks/useTypingEngine';
 import { useTimer } from '@/hooks/useTimer';
 import { useAudio } from '@/hooks/useAudio';
+import { useBgmStop } from '@/hooks/useBgm';
 import { InputCapture } from '@/components/lesson/InputCapture';
 import { TypingScreen } from '@/components/shared/TypingScreen';
 import { loadSettings, updateLessonProgress } from '@/lib/storage';
@@ -50,6 +51,7 @@ function LessonRunner({ lesson }: { lesson: Lesson }) {
   const unitIndex = parseInt(lesson.unitId.replace('unit-', ''), 10);
   const settings = loadSettings();
 
+  useBgmStop();
   const {
     state, kpm, accuracy, stars, xpEarned, correctChars,
     nextExpectedKeys, handleKey, reset, tick,

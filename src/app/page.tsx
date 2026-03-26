@@ -8,6 +8,7 @@ import type { UserProgress } from '@/types';
 import { UnitSection } from '@/components/dashboard/UnitSection';
 import { xpForNextLevel } from '@/lib/constants';
 import { SkeletonCard, SkeletonUnitSection, SkeletonProgressCard } from '@/components/shared/Skeleton';
+import { useBgm } from '@/hooks/useBgm';
 
 const PerformanceCharts = dynamic(
   () => import('@/components/dashboard/PerformanceCharts').then(m => m.PerformanceCharts),
@@ -58,6 +59,7 @@ function buildChartData(progress: UserProgress) {
 }
 
 export default function HomePage() {
+  useBgm();
   const [progress, setProgress] = useState<UserProgress | null>(null);
   const [unitsReady, setUnitsReady] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

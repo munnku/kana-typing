@@ -99,10 +99,21 @@ export const DEFAULT_SETTINGS: AppSettings = {
   showKeyboard: true,
   showFingerGuide: true,
   soundEnabled: false,
+  bgmEnabled: false,
+  bgmTrack: 1,
+  bgmVolume: 0.35,
   fontSize: 'md',
   theme: 'light',
   romajiGuide: 'always',
 };
+
+// BGM track list
+export const BGM_TRACKS = [
+  { id: 1 as const, label: '曲 1' },
+  { id: 2 as const, label: '曲 2' },
+  { id: 3 as const, label: '曲 3' },
+  { id: 4 as const, label: '曲 4' },
+];
 
 // Storage keys
 export const STORAGE_KEYS = {

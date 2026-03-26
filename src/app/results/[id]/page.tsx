@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import type { SessionResult, BadgeDefinition } from '@/types';
@@ -10,13 +10,72 @@ import { formatKpm, formatAccuracy, formatDuration } from '@/lib/metrics';
 import dynamic from 'next/dynamic';
 import { StarRating } from '@/components/results/StarRating';
 import { BadgeToast } from '@/components/results/BadgeToast';
+import { useBgmStop } from '@/hooks/useBgm';
+import { loadSettings } from '@/lib/storage';
 
 const KpmChart = dynamic(
   () => import('@/components/results/KpmChart').then(m => m.KpmChart),
   { ssr: false, loading: () => <div className="h-40 flex items-center justify-center"><p className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant/40">読み込み中...</p></div> }
 );
 
+function playResultSound(stars: 0 | 1 | 2 | 3) {
+  if (typeof window === 'undefined') return;
+  const settings = loadSettings();
+  if (!settings.soundEnabled) return;
+
+  const AudioCtx = window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+  if (!AudioCtx) return;
+  const ctx = new AudioCtx();
+
+  if (stars === 0) {
+    // 失敗音: 下降する2音
+    const times = [0, 0.25];
+    const freqs = [300, 220];
+    times.forEach((t, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.value = freqs[i];
+      gain.gain.setValueAtTime(0.3, ctx.currentTime + t);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + 0.4);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(ctx.currentTime + t); osc.stop(ctx.currentTime + t + 0.4);
+    });
+  } else if (stars === 1 || stars === 2) {
+    // 普通: 短い上昇2音
+    const freqs = [392, 523];
+    freqs.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = freq;
+      const t = ctx.currentTime + i * 0.18;
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.25, t + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(t); osc.stop(t + 0.3);
+    });
+  } else {
+    // 3星: ファンファーレ (C E G C)
+    const notes = [523, 659, 784, 1047];
+    notes.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = freq;
+      const t = ctx.currentTime + i * 0.15;
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.28, t + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(t); osc.stop(t + 0.5);
+    });
+  }
+}
+
 export default function ResultsPage() {
+  useBgmStop();
   const router = useRouter();
   const params = useParams();
   const lessonId = Array.isArray(params.id) ? params.id[0] : params.id;
@@ -25,6 +84,7 @@ export default function ResultsPage() {
 
   const [result, setResult] = useState<SessionResult | null>(null);
   const [newBadges, setNewBadges] = useState<BadgeDefinition[]>([]);
+  const soundPlayedRef = useRef(false);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -46,6 +106,11 @@ export default function ResultsPage() {
       if (!parsed || typeof parsed !== 'object') return;
       const r = parsed as SessionResult;
       setResult(r);
+      // Play result sound after short delay (let page render first)
+      if (!soundPlayedRef.current) {
+        soundPlayedRef.current = true;
+        setTimeout(() => playResultSound(r.stars), 400);
+      }
       const progress = loadProgress();
       const prevProgress = { ...progress, lessons: { ...progress.lessons } };
       const earned = evaluateBadges(r, progress, prevProgress);

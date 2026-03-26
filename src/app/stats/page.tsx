@@ -4,8 +4,10 @@ import { LESSONS } from '@/data/lessons';
 import { loadProgress, loadTestResults } from '@/lib/storage';
 import { getEarnedBadges } from '@/lib/badges';
 import type { UserProgress, TestResult, BadgeDefinition } from '@/types';
+import { useBgm } from '@/hooks/useBgm';
 
 export default function StatsPage() {
+  useBgm();
   const [progress, setProgress] = useState<UserProgress | null>(null);
   const [testHistory, setTestHistory] = useState<TestResult[]>([]);
   const [badges, setBadges] = useState<BadgeDefinition[]>([]);
