@@ -9,6 +9,7 @@ import { saveTestResult, loadTestResults, loadSettings } from '@/lib/storage';
 import { computeKpm, computeAccuracy } from '@/lib/metrics';
 import { TypingScreen } from '@/components/shared/TypingScreen';
 import { useBgmStop } from '@/hooks/useBgm';
+import { useAudio } from '@/hooks/useAudio';
 import type { DisplayChar } from '@/types';
 
 const TestHistoryChart = dynamic(
@@ -62,6 +63,7 @@ function buildLines(chars: DisplayChar[]): LineRange[] {
 
 export default function TestPage() {
   useBgmStop();
+  const { onKeyPress, resetProgression, unlock } = useAudio();
   const router = useRouter();
   const [duration, setDuration] = useState<Duration>(60);
   const [status, setStatus] = useState<'idle' | 'active' | 'done'>('idle');
@@ -93,8 +95,9 @@ export default function TestPage() {
     setCorrectChars(0);
     setTimeLeft(duration);
     setResult(null);
+    resetProgression();
     setStatus('active');
-  }, [duration]);
+  }, [duration, resetProgression]);
 
   useEffect(() => {
     if (status !== 'active') return;
@@ -127,6 +130,7 @@ export default function TestPage() {
     if (e.key.length !== 1) return;
     e.preventDefault();
 
+    unlock();
     const key = e.key.toLowerCase();
     const newPartial = partial + key;
     const currentChar = chars[cursor];
@@ -136,6 +140,7 @@ export default function TestPage() {
     setKeystrokes(k => k + 1);
 
     if (match === 'complete') {
+      onKeyPress(true);
       setCorrectChars(c => c + 1);
       let nextCursor = cursor + 1;
       while (nextCursor < chars.length && chars[nextCursor].kana === ' ') nextCursor++;
@@ -157,14 +162,16 @@ export default function TestPage() {
     } else {
       const singleMatch = matchRomaji(key, currentChar.acceptedRomaji);
       setErrors(err => err + 1);
+      onKeyPress(false);
       if (singleMatch !== 'no-match') {
         setPartial(key);
-        setChars(prev => prev.map((c, i) => i === cursor ? { ...c, state: 'current', typedRomaji: key } : c));
+        setChars(prev => prev.map((c, i) => i === cursor ? { ...c, state: 'error', typedRomaji: key } : c));
       } else {
         setPartial('');
+        setChars(prev => prev.map((c, i) => i === cursor ? { ...c, state: 'error' } : c));
       }
     }
-  }, [status, partial, chars, cursor, lines]);
+  }, [status, partial, chars, cursor, lines, onKeyPress, unlock]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKey);
