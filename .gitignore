@@ -34,3 +34,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# claude code
+.claude/
+
+# design assets
+stitch/
+
+# test results
+test-results/
+docs/screenshots/
