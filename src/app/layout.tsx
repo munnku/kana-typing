@@ -9,7 +9,7 @@ const plusJakartaSans = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--fon
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-label', weight: ['400','500','600','700'] });
 
 export const metadata: Metadata = {
-  title: 'Kinetic Type — 日本語タイピング',
+  title: 'かなタイピング — 日本語タイピング練習',
   description: '日本語ひらがなタイピング練習アプリ',
 };
 

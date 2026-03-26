@@ -263,7 +263,7 @@ export default function SettingsPage() {
         </section>
 
         <footer className="pt-4 text-center">
-          <p className="font-label text-[10px] text-on-surface-variant/40 tracking-[0.2em] uppercase">Kinetic Type — Kinetic Sanctuary Design System</p>
+          <p className="font-label text-[10px] text-on-surface-variant/40 tracking-[0.2em] uppercase">かなタイピング v1.0</p>
         </footer>
       </div>
     </div>

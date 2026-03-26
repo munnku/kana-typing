@@ -20,7 +20,7 @@ export function PerformanceCharts({ chartData, avgCps, avgAccuracy }: Performanc
       <div>
         <div className="flex items-center justify-between mb-1">
           <div>
-            <h3 className="font-headline font-bold text-base text-on-surface">CPS Progression</h3>
+            <h3 className="font-headline font-bold text-base text-on-surface">CPS 推移</h3>
             <p className="font-body text-xs text-on-surface-variant">1秒あたりのタイプ数の成長</p>
           </div>
           <div className="text-right">
@@ -48,7 +48,7 @@ export function PerformanceCharts({ chartData, avgCps, avgAccuracy }: Performanc
       <div>
         <div className="flex items-center justify-between mb-1">
           <div>
-            <h3 className="font-headline font-bold text-base text-on-surface">Accuracy Rate</h3>
+            <h3 className="font-headline font-bold text-base text-on-surface">正確率 推移</h3>
             <p className="font-body text-xs text-on-surface-variant">正確率の成長トレンド</p>
           </div>
           <div className="text-right">

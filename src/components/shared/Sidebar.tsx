@@ -21,8 +21,8 @@ export function Sidebar() {
           <span className="material-symbols-outlined text-on-primary text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>bolt</span>
         </div>
         <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap overflow-hidden">
-          <h1 className="text-xl font-bold tracking-tighter text-primary font-headline">Kinetic Type</h1>
-          <p className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Japanese Pro</p>
+          <h1 className="text-xl font-bold tracking-tighter text-primary font-headline">かなタイピング</h1>
+          <p className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">日本語練習</p>
         </div>
       </div>
 

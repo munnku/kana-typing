@@ -87,7 +87,7 @@ export default function LessonsPage() {
           <div className="flex justify-between items-end mb-4">
             <div>
               <span className="font-label text-[10px] text-secondary uppercase tracking-[0.2em] font-bold block mb-1">現在の状況</span>
-              <h1 className="font-headline text-3xl font-extrabold text-on-surface tracking-tight">Curriculum Mastery</h1>
+              <h1 className="font-headline text-3xl font-extrabold text-on-surface tracking-tight">カリキュラム</h1>
             </div>
             <div className="text-right">
               <span className="text-4xl font-headline font-black text-secondary">{pct}%</span>
@@ -145,7 +145,7 @@ export default function LessonsPage() {
                   </div>
                   {isInProgress && (
                     <span className="ml-2 px-2 py-0.5 rounded-full bg-secondary/10 border border-secondary/20 font-label text-[9px] text-secondary uppercase tracking-widest">
-                      In Progress
+                      進行中
                     </span>
                   )}
                 </div>

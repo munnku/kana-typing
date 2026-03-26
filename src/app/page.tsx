@@ -152,7 +152,7 @@ export default function HomePage() {
       <section>
         <p className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant mb-1">ようこそ</p>
         <h1 className="font-headline text-4xl font-extrabold tracking-tight text-on-surface">
-          Hello! <span className="text-primary">Mr. Guest</span>
+          かなタイピング<span className="text-primary">練習</span>
         </h1>
       </section>
 

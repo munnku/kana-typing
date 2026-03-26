@@ -8,7 +8,7 @@ import { buildTestText } from '@/data/testTexts';
 import { saveTestResult, loadTestResults, loadSettings } from '@/lib/storage';
 import { computeKpm, computeAccuracy } from '@/lib/metrics';
 import { TypingScreen } from '@/components/shared/TypingScreen';
-import { useBgmStop } from '@/hooks/useBgm';
+import { useBgm, startBgm, stopBgm } from '@/hooks/useBgm';
 import { useAudio } from '@/hooks/useAudio';
 import type { DisplayChar } from '@/types';
 
@@ -26,9 +26,9 @@ const VISIBLE_LINES = 2;
 interface LineRange { start: number; end: number; nextStart: number; }
 
 const DURATION_LABELS: Record<number, { short: string; sub: string; icon: string }> = {
-  60:  { short: '1分テスト',   sub: 'クイックスプリント', icon: 'timer_10' },
-  180: { short: '3分テスト',   sub: 'スタンダードラン', icon: 'timer_3' },
-  300: { short: '5分テスト',   sub: 'エンデュランス',  icon: 'timer' },
+  60:  { short: '1分テスト',   sub: 'スピード重視', icon: 'timer' },
+  180: { short: '3分テスト',   sub: 'バランス型', icon: 'timer' },
+  300: { short: '5分テスト',   sub: '持久力テスト', icon: 'timer' },
 };
 
 function buildTestChars(): DisplayChar[] {
@@ -62,11 +62,21 @@ function buildLines(chars: DisplayChar[]): LineRange[] {
 }
 
 export default function TestPage() {
-  useBgmStop();
   const { onKeyPress, resetProgression, unlock } = useAudio();
   const router = useRouter();
   const [duration, setDuration] = useState<Duration>(60);
   const [status, setStatus] = useState<'idle' | 'active' | 'done'>('idle');
+
+  // BGM: idle = BGM流す、active/done = BGM停止
+  useBgm();
+  useEffect(() => {
+    if (status === 'active' || status === 'done') {
+      stopBgm();
+    } else {
+      startBgm();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
   const [chars, setChars] = useState<DisplayChar[]>([]);
   const [lines, setLines] = useState<LineRange[]>([]);
   const [visibleLineStart, setVisibleLineStart] = useState(0);
