@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { LESSONS_BY_ID, getNextLesson } from '@/data/lessons';
 import { useTypingEngine } from '@/hooks/useTypingEngine';
 import { useTimer } from '@/hooks/useTimer';
+import { useAudio } from '@/hooks/useAudio';
 import { InputCapture } from '@/components/lesson/InputCapture';
 import { TypingScreen } from '@/components/shared/TypingScreen';
 import { loadSettings, updateLessonProgress } from '@/lib/storage';
@@ -55,6 +56,7 @@ function LessonRunner({ lesson }: { lesson: Lesson }) {
   } = useTypingEngine(lesson, unitIndex);
 
   const { elapsed, running, start, stop, reset: resetTimer } = useTimer();
+  const { onKeyPress, resetProgression, unlock } = useAudio();
   const completionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const lines = useMemo(
@@ -87,8 +89,29 @@ function LessonRunner({ lesson }: { lesson: Lesson }) {
     }
     reset();
     resetTimer();
+    resetProgression();
     setVisibleLineStart(0);
-  }, [reset, resetTimer]);
+  }, [reset, resetTimer, resetProgression]);
+
+  // Sound: detect cursor advance (correct) vs error count increase
+  const prevCursorRef = useRef(state.cursorIndex);
+  const prevErrorRef = useRef(state.errorCount);
+  useEffect(() => {
+    const cursorAdvanced = state.cursorIndex > prevCursorRef.current;
+    const errorIncreased = state.errorCount > prevErrorRef.current;
+    if (cursorAdvanced) {
+      onKeyPress(true);
+    } else if (errorIncreased) {
+      onKeyPress(false);
+    }
+    prevCursorRef.current = state.cursorIndex;
+    prevErrorRef.current = state.errorCount;
+  }, [state.cursorIndex, state.errorCount, onKeyPress]);
+
+  const handleKeyWithSound = useCallback((key: string) => {
+    unlock();
+    handleKey(key);
+  }, [handleKey, unlock]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -130,7 +153,7 @@ function LessonRunner({ lesson }: { lesson: Lesson }) {
 
   return (
     <>
-      <InputCapture onKey={handleKey} active={state.status !== 'complete'} />
+      <InputCapture onKey={handleKeyWithSound} active={state.status !== 'complete'} />
       <TypingScreen
         chars={state.chars}
         visibleLines={visibleLines}
