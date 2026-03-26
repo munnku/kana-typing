@@ -195,10 +195,10 @@ export default function HomePage() {
       {nextLesson && (
         <Link
           href={`/lessons/${nextLesson.id}`}
-          className="w-full bg-gradient-to-r from-primary/90 to-primary-container text-on-primary font-headline font-bold py-5 rounded-2xl flex items-center justify-between px-6 shadow-ambient hover:shadow-glow transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] group"
+          className="w-full gradient-primary text-white font-headline font-bold py-5 rounded-2xl flex items-center justify-between px-6 shadow-ambient hover:shadow-glow transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] group"
         >
           <div>
-            <div className="text-xs font-label text-on-primary/60 mb-0.5 uppercase tracking-widest">再開する</div>
+            <div className="text-xs font-label text-white/70 mb-0.5 uppercase tracking-widest">再開する</div>
             <div className="text-base">{nextLesson.title}</div>
           </div>
           <span className="material-symbols-outlined text-2xl group-hover:translate-x-1 transition-transform duration-200">arrow_forward</span>

@@ -3,9 +3,18 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { loadSettings } from '@/lib/storage';
 
-// C major pentatonic scale: C4 D4 E4 G4 A4 C5
-const PENTATONIC_MIDI = [60, 62, 64, 67, 69, 72];
-const PENTATONIC_HZ = PENTATONIC_MIDI.map((midi) => 440 * Math.pow(2, (midi - 69) / 12));
+// C major pentatonic intervals (semitones from root): C D E G A
+const PENTATONIC_INTERVALS = [0, 2, 4, 7, 9];
+const BASE_MIDI = 48; // C3 — start low so there's plenty of room to climb
+const MAX_MIDI = 96;  // C7 — ceiling
+
+function pentatonicHz(noteIndex: number): number {
+  const octave = Math.floor(noteIndex / PENTATONIC_INTERVALS.length);
+  const degree = noteIndex % PENTATONIC_INTERVALS.length;
+  const midi = BASE_MIDI + octave * 12 + PENTATONIC_INTERVALS[degree];
+  const clampedMidi = Math.min(midi, MAX_MIDI);
+  return 440 * Math.pow(2, (clampedMidi - 69) / 12);
+}
 
 // Singleton AudioContext shared across the app
 let sharedCtx: AudioContext | null = null;
@@ -53,7 +62,7 @@ function playClickSound(ctx: AudioContext, volume: number) {
 
 /** Play a pentatonic note (xylophone-like tone) */
 function playPentatonicNote(ctx: AudioContext, noteIndex: number, volume: number) {
-  const freq = PENTATONIC_HZ[noteIndex % PENTATONIC_HZ.length];
+  const freq = pentatonicHz(noteIndex);
 
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
@@ -91,12 +100,12 @@ export function useAudio() {
     await ensureResumed(ctx);
 
     if (correct) {
-      // Play click + ascending pentatonic note
+      // Play click + ascending pentatonic note (keeps rising, no wrap-around)
       playClickSound(ctx, 0.6);
       playPentatonicNote(ctx, noteIndexRef.current, 0.5);
-      noteIndexRef.current = (noteIndexRef.current + 1) % PENTATONIC_HZ.length;
+      noteIndexRef.current = noteIndexRef.current + 1;
     } else {
-      // Error: just a dull thud, reset progression
+      // Error: dull thud, reset progression back to bottom
       playClickSound(ctx, 0.3);
       noteIndexRef.current = 0;
     }
