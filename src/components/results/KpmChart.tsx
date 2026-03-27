@@ -18,29 +18,31 @@ export function KpmChart({ history }: KpmChartProps) {
 
   return (
     <div className="w-full">
-      <ResponsiveContainer width="100%" height={180}>
-        <ComposedChart data={data} margin={{ top: 4, right: 8, bottom: 4, left: -10 }}>
+      <ResponsiveContainer width="100%" height={220}>
+        <ComposedChart data={data} margin={{ top: 8, right: 16, bottom: 8, left: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(70,69,85,0.3)" />
-          <XAxis dataKey="回" tick={{ fontSize: 10, fill: '#918fa1' }} />
+          <XAxis dataKey="回" tick={{ fontSize: 20, fill: '#918fa1' }} />
           {/* 左軸: タイプ速度 */}
           <YAxis
             yAxisId="left"
-            tick={{ fontSize: 10, fill: '#c0c1ff' }}
-            label={{ value: 'キー/秒', angle: -90, position: 'insideLeft', offset: 16, style: { fontSize: 9, fill: '#c0c1ff' } }}
+            tick={{ fontSize: 20, fill: '#c0c1ff' }}
+            label={{ value: 'キー/秒', angle: -90, position: 'insideLeft', offset: 16, style: { fontSize: 18, fill: '#c0c1ff' } }}
+            width={50}
           />
           {/* 右軸: 正確率 */}
           <YAxis
             yAxisId="right"
             orientation="right"
             domain={[0, 100]}
-            tick={{ fontSize: 10, fill: '#4edea3' }}
-            label={{ value: '正確率%', angle: 90, position: 'insideRight', offset: 16, style: { fontSize: 9, fill: '#4edea3' } }}
+            tick={{ fontSize: 20, fill: '#4edea3' }}
+            label={{ value: '正確率%', angle: 90, position: 'insideRight', offset: 16, style: { fontSize: 18, fill: '#4edea3' } }}
+            width={55}
           />
           <Tooltip
-            contentStyle={{ background: '#171f33', border: '1px solid #464555', borderRadius: '8px', fontSize: '12px' }}
+            contentStyle={{ background: '#171f33', border: '1px solid #464555', borderRadius: '8px', fontSize: '14px' }}
             labelStyle={{ color: '#c7c4d8' }}
           />
-          <Legend wrapperStyle={{ fontSize: '11px', color: '#918fa1' }} />
+          <Legend wrapperStyle={{ fontSize: '14px', color: '#918fa1' }} />
           <Line
             yAxisId="left"
             type="monotone"

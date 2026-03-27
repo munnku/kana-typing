@@ -49,15 +49,17 @@ function buildLines(chars: DisplayChar[]): LineRange[] {
   let lineStart = 0;
   let charCount = 0;
   for (let i = 0; i < chars.length; i++) {
-    if (chars[i].kana !== ' ') charCount++;
-    // スペースで区切り、かつ12文字以上 → 改行
-    if (chars[i].kana === ' ' && charCount >= CHARS_PER_LINE) {
+    const isSpace = chars[i].kana === ' ';
+    // スペースも含めてカウント（表示幅を占めるため）
+    charCount++;
+
+    if (isSpace && charCount >= CHARS_PER_LINE) {
+      // スペースで区切れる位置で改行
       lines.push({ start: lineStart, end: i - 1, nextStart: i + 1 });
       lineStart = i + 1;
       charCount = 0;
-    }
-    // スペースなしで12文字を超えたら強制改行
-    else if (chars[i].kana !== ' ' && charCount >= CHARS_PER_LINE) {
+    } else if (!isSpace && charCount >= CHARS_PER_LINE) {
+      // スペースなしで上限を超えたら強制改行
       lines.push({ start: lineStart, end: i, nextStart: i + 1 });
       lineStart = i + 1;
       charCount = 0;
@@ -258,32 +260,28 @@ export default function TestPage() {
           </div>
 
           {/* Bento grid stats */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-            <div className="md:col-span-6 glass-card rounded-lg p-8 border border-[#464555]/5 relative overflow-hidden group">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+            <div className="md:col-span-6 glass-card rounded-lg px-6 py-4 border border-[#464555]/5 relative overflow-hidden group flex flex-col items-center justify-center">
               <div className="absolute -right-12 -top-12 w-48 h-48 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-all duration-700" />
-              <p className="font-label text-sm uppercase tracking-[0.3em] text-on-surface-variant mb-2">タイプ速度（キー/秒）</p>
-              <h2 className="font-headline font-extrabold text-8xl leading-none text-primary tracking-tighter">{result.kpm.toFixed(1)}</h2>
-              <div className="flex items-center gap-2 mt-3 text-secondary">
+              <p className="font-label text-xs uppercase tracking-[0.3em] text-on-surface-variant mb-1">タイプ速度（キー/秒）</p>
+              <h2 className="font-headline font-extrabold text-6xl leading-none text-primary tracking-tighter">{result.kpm.toFixed(1)}</h2>
+              <div className="flex items-center gap-2 mt-2 text-secondary">
                 <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>trending_up</span>
                 <span className="font-label font-bold text-sm">ベストエフォート</span>
               </div>
             </div>
-            <div className="md:col-span-3 glass-card rounded-lg p-6 flex flex-col justify-between border border-[#464555]/5">
-              <div>
-                <p className="font-label text-xs uppercase tracking-[0.2em] text-on-surface-variant mb-4">正確率</p>
-                <h3 className="font-headline font-bold text-4xl text-secondary">
-                  {result.accuracy.toFixed(1)}<span className="text-xl opacity-50">%</span>
-                </h3>
-              </div>
+            <div className="md:col-span-3 glass-card rounded-lg px-4 py-4 flex flex-col items-center justify-center gap-2 border border-[#464555]/5">
+              <p className="font-label text-xs uppercase tracking-[0.2em] text-on-surface-variant">正確率</p>
+              <h3 className="font-headline font-bold text-4xl text-secondary">
+                {result.accuracy.toFixed(1)}<span className="text-xl opacity-50">%</span>
+              </h3>
               <div className="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
                 <div className="h-full bg-secondary" style={{ width: `${result.accuracy}%` }} />
               </div>
             </div>
-            <div className="md:col-span-3 glass-card rounded-lg p-6 flex flex-col justify-between border border-[#464555]/5">
-              <div>
-                <p className="font-label text-xs uppercase tracking-[0.2em] text-on-surface-variant mb-4">文字数</p>
-                <h3 className="font-headline font-bold text-4xl text-on-surface">{result.correctChars}</h3>
-              </div>
+            <div className="md:col-span-3 glass-card rounded-lg px-4 py-4 flex flex-col items-center justify-center gap-2 border border-[#464555]/5">
+              <p className="font-label text-xs uppercase tracking-[0.2em] text-on-surface-variant">文字数</p>
+              <h3 className="font-headline font-bold text-4xl text-on-surface">{result.correctChars}</h3>
               <div className="flex gap-2">
                 <span className="w-2 h-2 rounded-full bg-primary-container" />
                 <span className="w-2 h-2 rounded-full bg-primary-container/40" />
@@ -402,6 +400,7 @@ export default function TestPage() {
   }
 
   return (
+    <AdSideLayout>
     <div className="min-h-screen px-8 py-10 space-y-10">
       <div className="fixed top-0 right-0 -z-10 w-96 h-96 bg-primary/10 rounded-full blur-[120px] translate-x-1/2 -translate-y-1/2 pointer-events-none" />
       <div className="fixed bottom-0 left-20 -z-10 w-80 h-80 bg-secondary/5 rounded-full blur-[100px] pointer-events-none" />
@@ -497,5 +496,6 @@ export default function TestPage() {
         </div>
       )}
     </div>
+    </AdSideLayout>
   );
 }

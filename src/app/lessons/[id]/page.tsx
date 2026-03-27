@@ -29,15 +29,17 @@ function buildLines(chars: DisplayChar[]): LineRange[] {
   let charCount = 0;
 
   for (let i = 0; i < chars.length; i++) {
-    if (chars[i].kana !== ' ') charCount++;
-    // スペースで区切り、かつ12文字以上 → 改行
-    if (chars[i].kana === ' ' && charCount >= CHARS_PER_LINE) {
+    const isSpace = chars[i].kana === ' ';
+    // スペースも含めてカウント（表示幅を占めるため）
+    charCount++;
+
+    if (isSpace && charCount >= CHARS_PER_LINE) {
+      // スペースで区切れる位置で改行
       lines.push({ start: lineStart, end: i - 1, nextStart: i + 1 });
       lineStart = i + 1;
       charCount = 0;
-    }
-    // スペースなしで12文字を超えたら強制改行
-    else if (chars[i].kana !== ' ' && charCount >= CHARS_PER_LINE) {
+    } else if (!isSpace && charCount >= CHARS_PER_LINE) {
+      // スペースなしで上限を超えたら強制改行
       lines.push({ start: lineStart, end: i, nextStart: i + 1 });
       lineStart = i + 1;
       charCount = 0;

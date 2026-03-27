@@ -17,13 +17,13 @@ export function TestHistoryChart({ history }: TestHistoryChartProps) {
 
   return (
     <div className="w-full">
-      <ResponsiveContainer width="100%" height={160}>
-        <LineChart data={data} margin={{ top: 4, right: 4, bottom: 4, left: -20 }}>
+      <ResponsiveContainer width="100%" height={200}>
+        <LineChart data={data} margin={{ top: 8, right: 8, bottom: 8, left: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(70,69,85,0.3)" />
-          <XAxis dataKey="attempt" tick={{ fontSize: 10, fill: '#918fa1' }} />
-          <YAxis tick={{ fontSize: 10, fill: '#918fa1' }} />
+          <XAxis dataKey="attempt" tick={{ fontSize: 20, fill: '#918fa1' }} />
+          <YAxis tick={{ fontSize: 20, fill: '#918fa1' }} width={50} />
           <Tooltip
-            contentStyle={{ background: '#171f33', border: '1px solid #464555', borderRadius: '8px', fontSize: '12px' }}
+            contentStyle={{ background: '#171f33', border: '1px solid #464555', borderRadius: '8px', fontSize: '14px' }}
             labelStyle={{ color: '#c7c4d8' }}
           />
           <Line type="monotone" dataKey="CPS" stroke="#c0c1ff" strokeWidth={2} dot={{ r: 3, fill: '#c0c1ff' }} activeDot={{ r: 5 }} />

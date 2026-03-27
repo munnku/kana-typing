@@ -99,8 +99,8 @@ export function HandDiagram({ activeKey, large }: HandDiagramProps) {
           />
         </div>
         <div className="flex items-center gap-3 justify-center">
-          <div className="w-5 h-5 rounded-full flex-none" style={{ backgroundColor: FINGER_COLORS[activeFinger] }} />
-          <span className="text-gray-700 dark:text-gray-200 text-2xl font-medium">
+          <div className="w-4 h-4 rounded-full flex-none" style={{ backgroundColor: FINGER_COLORS[activeFinger] }} />
+          <span className="text-gray-700 dark:text-gray-200 text-base font-medium whitespace-nowrap">
             {FINGER_NAMES_JP[activeFinger]} で{' '}
             <strong className="text-gray-900 dark:text-white">{keyInfo.label}</strong> を押す
           </span>

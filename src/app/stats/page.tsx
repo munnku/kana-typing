@@ -85,8 +85,8 @@ export default function StatsPage() {
         {/* Right stats cards */}
         <div className="lg:col-span-4 flex flex-col gap-4">
           {[
-            { icon: 'speed', label: '最高 タイプ速度', value: `${peakCps} キー/秒`, accent: 'text-primary', bg: 'bg-primary/10' },
-            { icon: 'trending_up', label: '平均 タイプ速度', value: `${avgCps} キー/秒`, accent: 'text-[#c0c1ff]', bg: 'bg-[#c0c1ff]/10' },
+            { icon: 'speed', label: '最高 タイプ速度（キー/秒）', value: `${peakCps} キー/秒`, accent: 'text-primary', bg: 'bg-primary/10' },
+            { icon: 'trending_up', label: '平均 タイプ速度（キー/秒）', value: `${avgCps} キー/秒`, accent: 'text-[#c0c1ff]', bg: 'bg-[#c0c1ff]/10' },
             { icon: 'verified', label: '平均 正確率', value: `${avgAccuracy}%`, accent: 'text-secondary', bg: 'bg-secondary/10' },
             { icon: 'school', label: '完了レッスン', value: `${completedLessons} / ${totalLessons}`, accent: 'text-tertiary', bg: 'bg-tertiary/10' },
           ].map(item => (

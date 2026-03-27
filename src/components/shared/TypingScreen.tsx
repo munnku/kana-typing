@@ -96,7 +96,7 @@ export function TypingScreen({
             {visibleLines.map((line, lineIdx) => (
               <div
                 key={visibleLineStart + lineIdx}
-                className={`flex flex-nowrap gap-0.5 font-mono justify-center min-h-[3.5rem] overflow-hidden ${lineIdx > 0 ? 'opacity-30' : ''}`}
+                className={`flex flex-nowrap gap-0.5 font-mono justify-center min-h-[3.5rem] overflow-hidden ${lineIdx > 0 ? 'opacity-20' : ''}`}
               >
                 {chars.slice(line.start, line.end + 1).map((char, i) => {
                   const absIdx = line.start + i;
@@ -145,7 +145,7 @@ export function TypingScreen({
       </div>
 
       {/* Hand diagram */}
-      <div className="flex-1 flex items-center justify-center min-h-0 pb-2 overflow-hidden">
+      <div className="flex-1 flex items-center justify-center min-h-0 pb-4 overflow-hidden">
         {showFingerGuide && activeKey ? (
           <HandDiagram activeKey={activeKey} large />
         ) : (
@@ -159,8 +159,8 @@ export function TypingScreen({
         )}
       </div>
 
-      {/* Bottom hint */}
-      <div className="fixed bottom-4 right-8 flex flex-col items-end gap-1 pointer-events-none opacity-30">
+      {/* Bottom hint — キーボードショートカット */}
+      <div className="flex-none flex justify-center pb-2 pointer-events-none opacity-30">
         <div className="flex gap-1 items-center">
           <kbd className="px-2 py-0.5 rounded bg-surface-container-highest border border-[#464555]/20 font-mono text-[10px]">Space</kbd>
           <span className="font-label text-[10px] text-on-surface-variant">/</span>
