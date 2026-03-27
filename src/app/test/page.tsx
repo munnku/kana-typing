@@ -368,9 +368,12 @@ export default function TestPage() {
               {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
             </div>
             <div className="h-4 w-px bg-[#464555]/30" />
-            <button onClick={() => setStatus('idle')} className="font-label text-xs uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2">
-              <span className="material-symbols-outlined text-sm">restart_alt</span>
-              やり直す
+            <button onClick={() => setStatus('idle')} className="font-label text-on-surface-variant hover:text-primary transition-colors flex flex-col items-center gap-0.5">
+              <div className="flex items-center gap-2 text-xs uppercase tracking-widest">
+                <span className="material-symbols-outlined text-sm">restart_alt</span>
+                やり直す
+              </div>
+              <span className="text-[9px] text-on-surface-variant/40 uppercase tracking-widest">Space / Enter</span>
             </button>
             <span className="font-label text-xs uppercase tracking-widest text-outline">ESC で終了</span>
           </>

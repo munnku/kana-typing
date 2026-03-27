@@ -49,20 +49,18 @@ export function TypingScreen({
   const barColor = topBarColor ?? (status === 'idle' ? 'bg-secondary shadow-glow-green' : 'bg-secondary shadow-glow-green');
 
   return (
-    <div className="flex flex-col bg-surface overflow-hidden" style={{ height: '100vh' }}>
+    <div className="flex bg-surface overflow-hidden" style={{ height: '100vh' }}>
       <div className="fixed inset-0 pointer-events-none -z-10" style={{ background: 'radial-gradient(circle at 50% 50%, #131b2e 0%, #0b1326 100%)' }} />
 
-      {/* 左右固定広告（xl以上のみ表示） */}
-      <div className="hidden xl:flex fixed left-20 top-0 bottom-0 w-[176px] items-center justify-center pointer-events-none z-10">
-        <div className="pointer-events-auto">
+      {/* 左サイド広告（xl以上のみ表示・sticky追従） */}
+      <div className="hidden xl:flex flex-shrink-0 w-[176px] items-start justify-center pt-8">
+        <div className="sticky top-8">
           <AdUnit slot={AD_SLOT_LEFT} format="vertical" />
         </div>
       </div>
-      <div className="hidden xl:flex fixed right-0 top-0 bottom-0 w-[176px] items-center justify-center pointer-events-none z-10">
-        <div className="pointer-events-auto">
-          <AdUnit slot={AD_SLOT_RIGHT} format="vertical" />
-        </div>
-      </div>
+
+      {/* メインコンテンツ */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
 
       {/* Top bar */}
       <div className="fixed top-0 left-20 right-0 h-1 z-50">
@@ -159,13 +157,12 @@ export function TypingScreen({
         )}
       </div>
 
-      {/* Bottom hint — キーボードショートカット */}
-      <div className="flex-none flex justify-center pb-2 pointer-events-none opacity-30">
-        <div className="flex gap-1 items-center">
-          <kbd className="px-2 py-0.5 rounded bg-surface-container-highest border border-[#464555]/20 font-mono text-[10px]">Space</kbd>
-          <span className="font-label text-[10px] text-on-surface-variant">/</span>
-          <kbd className="px-2 py-0.5 rounded bg-surface-container-highest border border-[#464555]/20 font-mono text-[10px]">Enter</kbd>
-          <span className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant self-center ml-1">やり直す</span>
+      </div>{/* end メインコンテンツ */}
+
+      {/* 右サイド広告（xl以上のみ表示・sticky追従） */}
+      <div className="hidden xl:flex flex-shrink-0 w-[176px] items-start justify-center pt-8">
+        <div className="sticky top-8">
+          <AdUnit slot={AD_SLOT_RIGHT} format="vertical" />
         </div>
       </div>
     </div>
