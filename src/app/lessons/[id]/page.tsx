@@ -2,14 +2,17 @@
 import { useEffect, useCallback, useMemo, useState, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
-import { LESSONS_BY_ID, getNextLesson } from '@/data/lessons';
+import { LESSONS_BY_ID, getNextLesson, getLessonsByUnit } from '@/data/lessons';
 import { useTypingEngine } from '@/hooks/useTypingEngine';
 import { useTimer } from '@/hooks/useTimer';
 import { useAudio } from '@/hooks/useAudio';
 import { useBgmStop } from '@/hooks/useBgm';
 import { InputCapture } from '@/components/lesson/InputCapture';
 import { TypingScreen } from '@/components/shared/TypingScreen';
+import { TutorialSlideshow } from '@/components/lesson/TutorialSlideshow';
 import { loadSettings, updateLessonProgress } from '@/lib/storage';
+import { TUTORIAL_SLIDES } from '@/data/tutorialSlides';
+import { AdSideLayout } from '@/components/ads/AdSideLayout';
 import type { Lesson, SessionResult, DisplayChar } from '@/types';
 
 const CHARS_PER_LINE = 12;
@@ -52,6 +55,15 @@ function LessonRunner({ lesson }: { lesson: Lesson }) {
   const settings = loadSettings();
 
   useBgmStop();
+
+  // チュートリアルスライド: 各ユニットの最初のレッスンかどうか判定
+  const isFirstLessonOfUnit = useMemo(() => {
+    const unitLessons = getLessonsByUnit(lesson.unitId);
+    return unitLessons.length > 0 && unitLessons[0].id === lesson.id;
+  }, [lesson]);
+
+  const unitSlides = isFirstLessonOfUnit ? (TUTORIAL_SLIDES[lesson.unitId] ?? null) : null;
+  const [showTutorial, setShowTutorial] = useState(!!unitSlides);
   const {
     state, kpm, accuracy, stars, xpEarned, correctChars,
     nextExpectedKeys, handleKey, reset, tick,
@@ -154,8 +166,11 @@ function LessonRunner({ lesson }: { lesson: Lesson }) {
   const visibleLines = lines.slice(visibleLineStart, visibleLineStart + VISIBLE_LINES);
 
   return (
-    <>
-      <InputCapture onKey={handleKeyWithSound} active={state.status !== 'complete'} />
+    <AdSideLayout>
+      {showTutorial && unitSlides && (
+        <TutorialSlideshow slides={unitSlides} onComplete={() => setShowTutorial(false)} />
+      )}
+      <InputCapture onKey={handleKeyWithSound} active={state.status !== 'complete' && !showTutorial} />
       <TypingScreen
         chars={state.chars}
         visibleLines={visibleLines}
@@ -197,7 +212,7 @@ function LessonRunner({ lesson }: { lesson: Lesson }) {
         statsBar={state.status === 'active' ? (
           <>
             <div className="flex items-center gap-2">
-              <span className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">CPS</span>
+              <span className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">タイプ速度</span>
               <span className="font-headline font-bold text-lg text-primary">{kpm.toFixed(1)}</span>
             </div>
             <div className="flex items-center gap-2">
@@ -211,7 +226,7 @@ function LessonRunner({ lesson }: { lesson: Lesson }) {
         activeKey={activeKey}
         idleHint="キーを押してスタート"
       />
-    </>
+    </AdSideLayout>
   );
 }
 

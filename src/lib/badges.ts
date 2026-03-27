@@ -1,5 +1,5 @@
 import type { UserProgress, BadgeDefinition, SessionResult } from '@/types';
-import { BADGE_DEFINITIONS } from './constants';
+import { BADGE_DEFINITIONS, CPS_TIER_THRESHOLDS } from './constants';
 
 export function evaluateBadges(
   result: SessionResult,
@@ -19,9 +19,10 @@ export function evaluateBadges(
   // first_lesson
   check('first_lesson', progress.totalSessions === 1);
 
-  // speed badges (kpm field now stores CPS values)
-  check('speed_100', result.kpm >= 1.7);
-  check('speed_200', result.kpm >= 3.3);
+  // CPS tier badges (9段階)
+  CPS_TIER_THRESHOLDS.forEach((threshold, i) => {
+    check(`speed_tier_${i}`, result.kpm >= threshold);
+  });
 
   // perfect lesson
   check('perfect_lesson', result.accuracy === 100);

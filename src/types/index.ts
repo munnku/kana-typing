@@ -119,6 +119,10 @@ export interface BadgeDefinition {
   description: string;
   icon: string;         // emoji
   condition: string;    // human-readable condition
+  // CPS tier badge fields (optional)
+  cpsGroupId?: string;  // groups all CPS tier badges under one card
+  cpsTier?: number;     // tier index (0-based) within the group
+  cpsThreshold?: number; // CPS value required
 }
 
 // App settings

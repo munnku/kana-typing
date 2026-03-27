@@ -10,6 +10,7 @@ import { computeKpm, computeAccuracy } from '@/lib/metrics';
 import { TypingScreen } from '@/components/shared/TypingScreen';
 import { useBgm, startBgm, stopBgm } from '@/hooks/useBgm';
 import { useAudio } from '@/hooks/useAudio';
+import { AdSideLayout } from '@/components/ads/AdSideLayout';
 import type { DisplayChar } from '@/types';
 
 const TestHistoryChart = dynamic(
@@ -218,7 +219,7 @@ export default function TestPage() {
     const isPersonalBest = history.length > 1 && result.kpm >= Math.max(...history.slice(1).map(h => h.kpm));
     const recentHistory = history.filter(h => h.duration === result.duration).slice(0, 10);
     return (
-      <>
+      <AdSideLayout>
         {/* Celebration bg */}
         <div className="fixed inset-0 pointer-events-none -z-10" style={{ background: 'radial-gradient(circle at center, rgba(192,193,255,0.06) 0%, rgba(11,19,38,0) 70%)' }} />
         <div className="fixed inset-0 pointer-events-none opacity-20 -z-10">
@@ -253,7 +254,7 @@ export default function TestPage() {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
             <div className="md:col-span-6 glass-card rounded-lg p-8 border border-[#464555]/5 relative overflow-hidden group">
               <div className="absolute -right-12 -top-12 w-48 h-48 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-all duration-700" />
-              <p className="font-label text-sm uppercase tracking-[0.3em] text-on-surface-variant mb-2">CPS（1秒あたり文字数）</p>
+              <p className="font-label text-sm uppercase tracking-[0.3em] text-on-surface-variant mb-2">タイプ速度（キー/秒）</p>
               <h2 className="font-headline font-extrabold text-8xl leading-none text-primary tracking-tighter">{result.kpm.toFixed(1)}</h2>
               <div className="flex items-center gap-2 mt-3 text-secondary">
                 <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>trending_up</span>
@@ -330,13 +331,14 @@ export default function TestPage() {
             </div>
           </div>
         </div>
-      </>
+      </AdSideLayout>
     );
   }
 
   // Active test — reuse shared TypingScreen
   if (status === 'active') {
     return (
+      <AdSideLayout>
       <TypingScreen
         chars={chars}
         visibleLines={visibleLines}
@@ -369,7 +371,7 @@ export default function TestPage() {
         statsBar={
           <>
             <div className="flex items-center gap-2">
-              <span className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">CPS</span>
+              <span className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">タイプ速度</span>
               <span className="font-headline font-bold text-lg text-primary">{currentKpm.toFixed(1)}</span>
             </div>
             <div className="flex items-center gap-2">
@@ -386,6 +388,7 @@ export default function TestPage() {
         showRomajiGuide={settings.romajiGuide !== 'never'}
         activeKey={activeKey}
       />
+      </AdSideLayout>
     );
   }
 
@@ -472,7 +475,7 @@ export default function TestPage() {
                 <div className="flex gap-6 text-right">
                   <div>
                     <p className="font-headline font-bold text-2xl text-primary">{h.kpm.toFixed(1)}</p>
-                    <p className="font-label text-[10px] text-on-surface-variant uppercase">CPS</p>
+                    <p className="font-label text-[10px] text-on-surface-variant uppercase">キー/秒</p>
                   </div>
                   <div>
                     <p className="font-headline font-bold text-2xl text-secondary">{h.accuracy.toFixed(1)}%</p>

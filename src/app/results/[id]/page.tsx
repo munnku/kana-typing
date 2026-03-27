@@ -12,6 +12,7 @@ import { StarRating } from '@/components/results/StarRating';
 import { BadgeToast } from '@/components/results/BadgeToast';
 import { useBgmStop } from '@/hooks/useBgm';
 import { loadSettings } from '@/lib/storage';
+import { AdSideLayout } from '@/components/ads/AdSideLayout';
 
 const KpmChart = dynamic(
   () => import('@/components/results/KpmChart').then(m => m.KpmChart),
@@ -137,7 +138,7 @@ export default function ResultsPage() {
   const isPersonalBest = result.kpm >= lessonProgress.bestKpm;
 
   return (
-    <>
+    <AdSideLayout>
       <BadgeToast badges={newBadges} />
       {/* Celebration bg */}
       <div className="fixed inset-0 pointer-events-none -z-10" style={{ background: 'radial-gradient(circle at center, rgba(192,193,255,0.06) 0%, rgba(11,19,38,0) 70%)' }} />
@@ -173,7 +174,7 @@ export default function ResultsPage() {
           {/* KPM main */}
           <div className="md:col-span-6 glass-card rounded-lg p-8 border border-[#464555]/5 relative overflow-hidden group">
             <div className="absolute -right-12 -top-12 w-48 h-48 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-all duration-700" />
-            <p className="font-label text-sm uppercase tracking-[0.3em] text-on-surface-variant mb-2">CPS（1秒あたり文字数）</p>
+            <p className="font-label text-sm uppercase tracking-[0.3em] text-on-surface-variant mb-2">タイプ速度（キー/秒）</p>
             <h2 className="font-headline font-extrabold text-8xl leading-none text-primary tracking-tighter">{formatKpm(result.kpm)}</h2>
             <div className="flex items-center gap-2 mt-3 text-secondary">
               <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>trending_up</span>
@@ -258,6 +259,6 @@ export default function ResultsPage() {
           </div>
         </div>
       </div>
-    </>
+    </AdSideLayout>
   );
 }

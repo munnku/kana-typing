@@ -78,13 +78,38 @@ export function xpForNextLevel(level: number): number {
   return LEVEL_THRESHOLDS[level] ?? LEVEL_THRESHOLDS[LEVEL_THRESHOLDS.length - 1];
 }
 
+// CPS tier badge definitions (1.0 → 5.0, 0.5 刻み 9段階)
+// Tier 0-5: 通常, Tier 6: 銅, Tier 7: 銀, Tier 8: 金
+export const CPS_TIER_THRESHOLDS = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0] as const;
+export const CPS_TIER_LABELS = [
+  { label: 'ビギナー',       icon: '🐢', color: 'text-slate-400',  bg: 'bg-slate-400/10',  border: 'border-slate-400/30' },
+  { label: 'アマチュア',     icon: '🐇', color: 'text-blue-400',   bg: 'bg-blue-400/10',   border: 'border-blue-400/30' },
+  { label: 'セミプロ',       icon: '🦊', color: 'text-cyan-400',   bg: 'bg-cyan-400/10',   border: 'border-cyan-400/30' },
+  { label: 'エキスパート',   icon: '🦅', color: 'text-emerald-400',bg: 'bg-emerald-400/10',border: 'border-emerald-400/30' },
+  { label: 'マスター',       icon: '🔥', color: 'text-orange-400', bg: 'bg-orange-400/10', border: 'border-orange-400/30' },
+  { label: 'グランドマスター', icon: '⚡', color: 'text-yellow-400', bg: 'bg-yellow-400/10', border: 'border-yellow-400/30' },
+  // 銅・銀・金
+  { label: 'ブロンズ',       icon: '🥉', color: 'text-amber-600',  bg: 'bg-amber-600/10',  border: 'border-amber-600/40', isBronze: true },
+  { label: 'シルバー',       icon: '🥈', color: 'text-slate-300',  bg: 'bg-slate-300/10',  border: 'border-slate-300/40', isSilver: true },
+  { label: 'ゴールド',       icon: '🥇', color: 'text-yellow-300', bg: 'bg-yellow-300/10', border: 'border-yellow-300/40', isGold: true },
+] as const;
+
 // Badge definitions
 export const BADGE_DEFINITIONS: BadgeDefinition[] = [
   { id: 'first_lesson', title: '第一歩', description: '初めてレッスンを完了した', icon: '🌱', condition: '初めてレッスンを完了する' },
-  { id: 'home_row_master', title: 'ホームロー マスター', description: 'Unit 0 を全て星2以上でクリア', icon: '🏠', condition: 'Unit 0 を全て星2以上でクリア' },
+  { id: 'home_row_master', title: 'ホームポジション マスター', description: 'Unit 0 を全て星2以上でクリア', icon: '🏠', condition: 'Unit 0 を全て星2以上でクリア' },
   { id: 'aiueo_master', title: 'あいうえおマスター', description: 'あ行テストをクリア', icon: '🎵', condition: 'あ行テストをクリアする' },
-  { id: 'speed_100', title: 'スピードスター', description: 'CPS 1.7 以上でレッスン完了', icon: '⚡', condition: 'CPS 1.7 以上でレッスンをクリア' },
-  { id: 'speed_200', title: 'タイピングエース', description: 'CPS 3.3 以上でレッスン完了', icon: '🚀', condition: 'CPS 3.3 以上でレッスンをクリア' },
+  // CPS tier badges (9段階, grouped)
+  ...CPS_TIER_THRESHOLDS.map((threshold, i) => ({
+    id: `speed_tier_${i}`,
+    title: CPS_TIER_LABELS[i].label,
+    description: `タイプ速度 ${threshold} キー/秒 以上でレッスン完了`,
+    icon: CPS_TIER_LABELS[i].icon,
+    condition: `タイプ速度 ${threshold} キー/秒 以上でレッスンをクリア`,
+    cpsGroupId: 'speed_tiers',
+    cpsTier: i,
+    cpsThreshold: threshold,
+  })),
   { id: 'perfect_lesson', title: 'パーフェクト', description: '正確率 100% でレッスン完了', icon: '💎', condition: '正確率100%でレッスンをクリア' },
   { id: 'streak_7', title: '7日連続', description: '7日間連続で練習した', icon: '🔥', condition: '7日間連続で練習する' },
   { id: 'streak_30', title: '30日連続', description: '30日間連続で練習した', icon: '🌟', condition: '30日間連続で練習する' },
