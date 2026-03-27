@@ -80,7 +80,7 @@ export function TypingScreen({
             {visibleLines.map((line, lineIdx) => (
               <div
                 key={visibleLineStart + lineIdx}
-                className={`flex flex-wrap gap-1 font-mono justify-center min-h-[4rem] ${lineIdx > 0 ? 'opacity-30' : ''}`}
+                className={`flex flex-nowrap gap-1 font-mono justify-center min-h-[4rem] overflow-hidden ${lineIdx > 0 ? 'opacity-30' : ''}`}
               >
                 {chars.slice(line.start, line.end + 1).map((char, i) => {
                   const absIdx = line.start + i;
@@ -89,7 +89,7 @@ export function TypingScreen({
                   return (
                     <span key={absIdx} className="inline-flex flex-col items-center relative">
                       <span className={clsx('text-4xl px-1 rounded-xl transition-colors duration-75', {
-                        'text-primary relative': isCurrent && char.state !== 'error',
+                        'bg-[#1a3a2a] text-[#7fffb8] relative': isCurrent && char.state !== 'error',
                         'bg-error-container text-error': char.state === 'error',
                         'text-secondary': char.state === 'correct',
                         'text-on-surface-variant/40': char.state === 'pending',
@@ -97,18 +97,18 @@ export function TypingScreen({
                       })}>
                         {char.kana}
                         {isCurrent && char.state !== 'error' && (
-                          <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-8 h-[3px] bg-primary animate-caret-blink rounded-full shadow-glow" />
+                          <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-8 h-[3px] bg-secondary animate-caret-blink rounded-full shadow-glow-green" />
                         )}
                       </span>
                       {showRomajiGuide && (
                         <span className={clsx('text-xs font-mono mt-1', {
-                          'text-primary font-bold': isCurrent,
+                          'text-[#7fffb8] font-bold': isCurrent,
                           'text-secondary/60': char.state === 'correct',
                           'text-error': char.state === 'error',
                           'text-on-surface-variant/30': char.state === 'pending',
                         })}>
                           {isCurrent && char.typedRomaji
-                            ? <><span className="text-secondary">{char.typedRomaji}</span><span>{char.displayRomaji.slice(char.typedRomaji.length)}</span></>
+                            ? <><span className="text-white font-bold">{char.typedRomaji}</span><span className="text-[#7fffb8]/70">{char.displayRomaji.slice(char.typedRomaji.length)}</span></>
                             : char.displayRomaji
                           }
                         </span>

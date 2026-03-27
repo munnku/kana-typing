@@ -1,5 +1,7 @@
 'use client';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
+import {
+  ComposedChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend,
+} from 'recharts';
 
 interface KpmChartProps {
   history: Array<{ kpm: number; accuracy: number; date: string }>;
@@ -9,23 +11,55 @@ export function KpmChart({ history }: KpmChartProps) {
   if (history.length < 2) return null;
 
   const data = [...history].reverse().map((h, i) => ({
-    attempt: `${i + 1}回目`,
-    CPS: h.kpm,
+    回: `${i + 1}`,
+    タイプ速度: Math.round(h.kpm * 10) / 10,
     正確率: Math.round(h.accuracy),
   }));
 
   return (
     <div className="w-full">
-      <h3 className="text-sm font-semibold text-gray-600 mb-2">過去の成績</h3>
-      <ResponsiveContainer width="100%" height={160}>
-        <LineChart data={data} margin={{ top: 5, right: 10, bottom: 5, left: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-          <XAxis dataKey="attempt" tick={{ fontSize: 11 }} />
-          <YAxis tick={{ fontSize: 11 }} />
-          <Tooltip />
-          <Line type="monotone" dataKey="CPS" stroke="#3b82f6" strokeWidth={2} dot={{ r: 3 }} />
-          <Line type="monotone" dataKey="正確率" stroke="#10b981" strokeWidth={2} dot={{ r: 3 }} />
-        </LineChart>
+      <ResponsiveContainer width="100%" height={180}>
+        <ComposedChart data={data} margin={{ top: 4, right: 8, bottom: 4, left: -10 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(70,69,85,0.3)" />
+          <XAxis dataKey="回" tick={{ fontSize: 10, fill: '#918fa1' }} />
+          {/* 左軸: タイプ速度 */}
+          <YAxis
+            yAxisId="left"
+            tick={{ fontSize: 10, fill: '#c0c1ff' }}
+            label={{ value: 'キー/秒', angle: -90, position: 'insideLeft', offset: 16, style: { fontSize: 9, fill: '#c0c1ff' } }}
+          />
+          {/* 右軸: 正確率 */}
+          <YAxis
+            yAxisId="right"
+            orientation="right"
+            domain={[0, 100]}
+            tick={{ fontSize: 10, fill: '#4edea3' }}
+            label={{ value: '正確率%', angle: 90, position: 'insideRight', offset: 16, style: { fontSize: 9, fill: '#4edea3' } }}
+          />
+          <Tooltip
+            contentStyle={{ background: '#171f33', border: '1px solid #464555', borderRadius: '8px', fontSize: '12px' }}
+            labelStyle={{ color: '#c7c4d8' }}
+          />
+          <Legend wrapperStyle={{ fontSize: '11px', color: '#918fa1' }} />
+          <Line
+            yAxisId="left"
+            type="monotone"
+            dataKey="タイプ速度"
+            stroke="#c0c1ff"
+            strokeWidth={2}
+            dot={{ r: 3, fill: '#c0c1ff' }}
+            activeDot={{ r: 5 }}
+          />
+          <Line
+            yAxisId="right"
+            type="monotone"
+            dataKey="正確率"
+            stroke="#4edea3"
+            strokeWidth={2}
+            dot={{ r: 3, fill: '#4edea3' }}
+            activeDot={{ r: 5 }}
+          />
+        </ComposedChart>
       </ResponsiveContainer>
     </div>
   );

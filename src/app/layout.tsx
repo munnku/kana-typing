@@ -3,6 +3,7 @@ import { Inter, Plus_Jakarta_Sans, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import { Sidebar } from '@/components/shared/Sidebar';
 import { ThemeProvider } from '@/components/shared/ThemeProvider';
+import { SidebarAd } from '@/components/ads/SidebarAd';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const plusJakartaSans = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-headline', weight: ['400','500','600','700','800'] });
@@ -30,8 +31,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider>
           <div className="flex min-h-screen">
             <Sidebar />
-            <main className="flex-1 ml-20 min-h-screen">
-              {children}
+            <main className="flex-1 ml-20 min-h-screen flex gap-0">
+              <div className="flex-1 min-w-0">
+                {children}
+              </div>
+              <SidebarAd />
             </main>
           </div>
         </ThemeProvider>

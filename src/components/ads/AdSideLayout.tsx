@@ -21,9 +21,11 @@ interface AdSideLayoutProps {
 export function AdSideLayout({ children }: AdSideLayoutProps) {
   return (
     <div className="flex items-start justify-center gap-4 w-full">
-      {/* 左サイド広告 — PC のみ表示 */}
-      <div className="hidden xl:flex flex-col items-center pt-16 flex-shrink-0">
-        <AdUnit slot={AD_SLOT_LEFT} format="vertical" />
+      {/* 左サイド広告 — PC のみ表示（スクロール追従） */}
+      <div className="hidden xl:block flex-shrink-0 w-[176px]">
+        <div className="sticky top-8">
+          <AdUnit slot={AD_SLOT_LEFT} format="vertical" />
+        </div>
       </div>
 
       {/* メインコンテンツ */}
@@ -31,9 +33,11 @@ export function AdSideLayout({ children }: AdSideLayoutProps) {
         {children}
       </div>
 
-      {/* 右サイド広告 — PC のみ表示 */}
-      <div className="hidden xl:flex flex-col items-center pt-16 flex-shrink-0">
-        <AdUnit slot={AD_SLOT_RIGHT} format="vertical" />
+      {/* 右サイド広告 — PC のみ表示（スクロール追従） */}
+      <div className="hidden xl:block flex-shrink-0 w-[176px]">
+        <div className="sticky top-8">
+          <AdUnit slot={AD_SLOT_RIGHT} format="vertical" />
+        </div>
       </div>
     </div>
   );
