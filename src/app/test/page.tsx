@@ -321,10 +321,13 @@ export default function TestPage() {
             <div className="grid grid-cols-2 gap-4">
               <button
                 onClick={startTest}
-                className="py-4 rounded-full font-headline font-bold text-sm text-on-surface transition-all active:scale-95 flex items-center justify-center gap-2 border border-[#464555]/20 bg-surface-container-high hover:bg-surface-container-highest"
+                className="py-4 rounded-full font-headline font-bold text-sm text-on-surface transition-all active:scale-95 flex flex-col items-center justify-center gap-1 border border-[#464555]/20 bg-surface-container-high hover:bg-surface-container-highest"
               >
-                <span className="material-symbols-outlined text-sm">refresh</span>
-                もう一度
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-sm">refresh</span>
+                  もう一度
+                </div>
+                <span className="font-label text-[9px] text-on-surface-variant/50 uppercase tracking-widest">Space / Enter</span>
               </button>
               <button
                 onClick={() => setStatus('idle')}
@@ -333,10 +336,6 @@ export default function TestPage() {
                 <span className="material-symbols-outlined text-sm">keyboard_backspace</span>
                 テスト選択
               </button>
-            </div>
-            <div className="grid grid-cols-2 gap-4 opacity-40">
-              <p className="text-center font-label text-[10px] text-on-surface-variant uppercase tracking-widest pt-1">Space / Enter → もう一度</p>
-              <p className="text-center font-label text-[10px] text-on-surface-variant uppercase tracking-widest pt-1">ESC → テスト選択</p>
             </div>
           </div>
         </div>
@@ -400,7 +399,7 @@ export default function TestPage() {
   }
 
   return (
-    <AdSideLayout>
+    <AdSideLayout side="right">
     <div className="min-h-screen px-8 py-10 space-y-10">
       <div className="fixed top-0 right-0 -z-10 w-96 h-96 bg-primary/10 rounded-full blur-[120px] translate-x-1/2 -translate-y-1/2 pointer-events-none" />
       <div className="fixed bottom-0 left-20 -z-10 w-80 h-80 bg-secondary/5 rounded-full blur-[100px] pointer-events-none" />

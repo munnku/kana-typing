@@ -8,7 +8,7 @@ const AD_SLOT_MENU = 'PLACEHOLDER';
  * メニュー系ページの右サイド固定広告（スクロール追従）
  * レッスン・テスト・結果・広告ゲートページでは非表示
  */
-const LESSON_PATHS = ['/lessons/', '/results/', '/ad-gate'];
+const LESSON_PATHS = ['/lessons/', '/results/', '/ad-gate', '/test'];
 
 export function SidebarAd() {
   const pathname = usePathname();
