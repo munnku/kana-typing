@@ -231,15 +231,18 @@ export default function ResultsPage() {
         )}
 
         {/* CTA actions */}
-        <div className="max-w-md mx-auto space-y-4">
+        <div className="max-w-md mx-auto space-y-3 pb-8">
           {nextLesson && (
-            <Link
-              href={`/lessons/${nextLesson.id}`}
-              className="gradient-primary w-full py-5 rounded-full font-headline font-extrabold text-lg text-on-primary flex items-center justify-center gap-3 transition-all active:scale-95 shadow-ambient hover:shadow-glow group"
-            >
-              次のレッスン: {nextLesson.title}
-              <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
-            </Link>
+            <div className="flex flex-col gap-1">
+              <Link
+                href={`/lessons/${nextLesson.id}`}
+                className="gradient-primary w-full py-5 rounded-full font-headline font-extrabold text-lg text-on-primary flex items-center justify-center gap-3 transition-all active:scale-95 shadow-ambient hover:shadow-glow group"
+              >
+                次のレッスン: {nextLesson.title}
+                <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+              </Link>
+              <p className="text-center font-label text-[10px] text-on-surface-variant/40 uppercase tracking-widest">Space / Enter でも進む</p>
+            </div>
           )}
           <div className="grid grid-cols-2 gap-4">
             <Link
@@ -256,6 +259,10 @@ export default function ResultsPage() {
               <span className="material-symbols-outlined text-sm">grid_view</span>
               一覧へ
             </Link>
+          </div>
+          <div className="grid grid-cols-2 gap-4 opacity-40">
+            <p className="text-center font-label text-[10px] text-on-surface-variant uppercase tracking-widest pt-1">← もう一度</p>
+            <p className="text-center font-label text-[10px] text-on-surface-variant uppercase tracking-widest pt-1">ESC → 一覧へ</p>
           </div>
         </div>
       </div>

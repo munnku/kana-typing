@@ -50,8 +50,15 @@ function buildLines(chars: DisplayChar[]): LineRange[] {
   let charCount = 0;
   for (let i = 0; i < chars.length; i++) {
     if (chars[i].kana !== ' ') charCount++;
+    // スペースで区切り、かつ12文字以上 → 改行
     if (chars[i].kana === ' ' && charCount >= CHARS_PER_LINE) {
       lines.push({ start: lineStart, end: i - 1, nextStart: i + 1 });
+      lineStart = i + 1;
+      charCount = 0;
+    }
+    // スペースなしで12文字を超えたら強制改行
+    else if (chars[i].kana !== ' ' && charCount >= CHARS_PER_LINE) {
+      lines.push({ start: lineStart, end: i, nextStart: i + 1 });
       lineStart = i + 1;
       charCount = 0;
     }
@@ -312,7 +319,7 @@ export default function TestPage() {
           )}
 
           {/* Actions */}
-          <div className="max-w-md mx-auto space-y-4">
+          <div className="max-w-md mx-auto space-y-3 pb-8">
             <div className="grid grid-cols-2 gap-4">
               <button
                 onClick={startTest}
@@ -329,6 +336,10 @@ export default function TestPage() {
                 テスト選択
               </button>
             </div>
+            <div className="grid grid-cols-2 gap-4 opacity-40">
+              <p className="text-center font-label text-[10px] text-on-surface-variant uppercase tracking-widest pt-1">Space / Enter → もう一度</p>
+              <p className="text-center font-label text-[10px] text-on-surface-variant uppercase tracking-widest pt-1">ESC → テスト選択</p>
+            </div>
           </div>
         </div>
       </AdSideLayout>
@@ -338,7 +349,6 @@ export default function TestPage() {
   // Active test — reuse shared TypingScreen
   if (status === 'active') {
     return (
-      <AdSideLayout>
       <TypingScreen
         chars={chars}
         visibleLines={visibleLines}
@@ -388,7 +398,6 @@ export default function TestPage() {
         showRomajiGuide={settings.romajiGuide !== 'never'}
         activeKey={activeKey}
       />
-      </AdSideLayout>
     );
   }
 

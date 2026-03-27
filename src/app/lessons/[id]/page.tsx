@@ -12,7 +12,6 @@ import { TypingScreen } from '@/components/shared/TypingScreen';
 import { TutorialSlideshow } from '@/components/lesson/TutorialSlideshow';
 import { loadSettings, updateLessonProgress } from '@/lib/storage';
 import { TUTORIAL_SLIDES } from '@/data/tutorialSlides';
-import { AdSideLayout } from '@/components/ads/AdSideLayout';
 import type { Lesson, SessionResult, DisplayChar } from '@/types';
 
 const CHARS_PER_LINE = 12;
@@ -31,8 +30,15 @@ function buildLines(chars: DisplayChar[]): LineRange[] {
 
   for (let i = 0; i < chars.length; i++) {
     if (chars[i].kana !== ' ') charCount++;
+    // スペースで区切り、かつ12文字以上 → 改行
     if (chars[i].kana === ' ' && charCount >= CHARS_PER_LINE) {
       lines.push({ start: lineStart, end: i - 1, nextStart: i + 1 });
+      lineStart = i + 1;
+      charCount = 0;
+    }
+    // スペースなしで12文字を超えたら強制改行
+    else if (chars[i].kana !== ' ' && charCount >= CHARS_PER_LINE) {
+      lines.push({ start: lineStart, end: i, nextStart: i + 1 });
       lineStart = i + 1;
       charCount = 0;
     }
@@ -166,7 +172,7 @@ function LessonRunner({ lesson }: { lesson: Lesson }) {
   const visibleLines = lines.slice(visibleLineStart, visibleLineStart + VISIBLE_LINES);
 
   return (
-    <AdSideLayout>
+    <>
       {showTutorial && unitSlides && (
         <TutorialSlideshow slides={unitSlides} onComplete={() => setShowTutorial(false)} />
       )}
@@ -226,7 +232,7 @@ function LessonRunner({ lesson }: { lesson: Lesson }) {
         activeKey={activeKey}
         idleHint="キーを押してスタート"
       />
-    </AdSideLayout>
+    </>
   );
 }
 

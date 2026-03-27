@@ -1,7 +1,11 @@
 'use client';
 import { clsx } from 'clsx';
 import { HandDiagram } from '@/components/keyboard/HandDiagram';
+import { AdUnit } from '@/components/ads/AdUnit';
 import type { DisplayChar } from '@/types';
+
+const AD_SLOT_LEFT = 'PLACEHOLDER';
+const AD_SLOT_RIGHT = 'PLACEHOLDER';
 
 interface TypingScreenProps {
   chars: DisplayChar[];
@@ -48,6 +52,18 @@ export function TypingScreen({
     <div className="flex flex-col bg-surface overflow-hidden" style={{ height: '100vh' }}>
       <div className="fixed inset-0 pointer-events-none -z-10" style={{ background: 'radial-gradient(circle at 50% 50%, #131b2e 0%, #0b1326 100%)' }} />
 
+      {/* 左右固定広告（xl以上のみ表示） */}
+      <div className="hidden xl:flex fixed left-20 top-0 bottom-0 w-[176px] items-center justify-center pointer-events-none z-10">
+        <div className="pointer-events-auto">
+          <AdUnit slot={AD_SLOT_LEFT} format="vertical" />
+        </div>
+      </div>
+      <div className="hidden xl:flex fixed right-0 top-0 bottom-0 w-[176px] items-center justify-center pointer-events-none z-10">
+        <div className="pointer-events-auto">
+          <AdUnit slot={AD_SLOT_RIGHT} format="vertical" />
+        </div>
+      </div>
+
       {/* Top bar */}
       <div className="fixed top-0 left-20 right-0 h-1 z-50">
         <div
@@ -74,13 +90,13 @@ export function TypingScreen({
       )}
 
       {/* Typing area */}
-      <div className="flex-none flex flex-col items-center px-6 py-4">
-        <div className="relative w-full max-w-3xl text-center px-8 rounded-2xl glass-surface border border-[#464555]/5 py-6">
+      <div className="flex-none flex flex-col items-center px-6 py-2">
+        <div className="relative w-full max-w-3xl text-center px-8 rounded-2xl glass-surface border border-[#464555]/5 py-4">
           <div className="w-full max-w-2xl mx-auto space-y-3">
             {visibleLines.map((line, lineIdx) => (
               <div
                 key={visibleLineStart + lineIdx}
-                className={`flex flex-nowrap gap-1 font-mono justify-center min-h-[4rem] overflow-hidden ${lineIdx > 0 ? 'opacity-30' : ''}`}
+                className={`flex flex-nowrap gap-0.5 font-mono justify-center min-h-[3.5rem] overflow-hidden ${lineIdx > 0 ? 'opacity-30' : ''}`}
               >
                 {chars.slice(line.start, line.end + 1).map((char, i) => {
                   const absIdx = line.start + i;
@@ -88,7 +104,7 @@ export function TypingScreen({
                   if (char.kana === ' ') return <span key={absIdx} className="w-4 inline-block" />;
                   return (
                     <span key={absIdx} className="inline-flex flex-col items-center relative">
-                      <span className={clsx('text-4xl px-1 rounded-xl transition-colors duration-75', {
+                      <span className={clsx('text-[2rem] leading-tight px-1 rounded-xl transition-colors duration-75', {
                         'bg-[#1a3a2a] text-[#7fffb8] relative': isCurrent && char.state !== 'error',
                         'bg-error-container text-error': char.state === 'error',
                         'text-secondary': char.state === 'correct',
@@ -129,7 +145,7 @@ export function TypingScreen({
       </div>
 
       {/* Hand diagram */}
-      <div className="flex-1 flex items-center justify-center min-h-0 pb-4">
+      <div className="flex-1 flex items-center justify-center min-h-0 pb-2 overflow-hidden">
         {showFingerGuide && activeKey ? (
           <HandDiagram activeKey={activeKey} large />
         ) : (
@@ -144,10 +160,12 @@ export function TypingScreen({
       </div>
 
       {/* Bottom hint */}
-      <div className="fixed bottom-6 right-8 flex flex-col items-end gap-1 pointer-events-none opacity-20">
-        <div className="flex gap-2">
-          <kbd className="px-2 py-1 rounded bg-surface-container-highest border border-[#464555]/20 font-mono text-[10px]">Space</kbd>
-          <span className="font-label text-[10px] uppercase tracking-widest self-center">やり直す</span>
+      <div className="fixed bottom-4 right-8 flex flex-col items-end gap-1 pointer-events-none opacity-30">
+        <div className="flex gap-1 items-center">
+          <kbd className="px-2 py-0.5 rounded bg-surface-container-highest border border-[#464555]/20 font-mono text-[10px]">Space</kbd>
+          <span className="font-label text-[10px] text-on-surface-variant">/</span>
+          <kbd className="px-2 py-0.5 rounded bg-surface-container-highest border border-[#464555]/20 font-mono text-[10px]">Enter</kbd>
+          <span className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant self-center ml-1">やり直す</span>
         </div>
       </div>
     </div>

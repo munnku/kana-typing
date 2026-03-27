@@ -5,6 +5,12 @@ import { loadProgress, loadTestResults } from '@/lib/storage';
 import { getEarnedBadges } from '@/lib/badges';
 import type { UserProgress, TestResult, BadgeDefinition } from '@/types';
 import { useBgm } from '@/hooks/useBgm';
+import dynamic from 'next/dynamic';
+
+const PerformanceCharts = dynamic(
+  () => import('@/components/dashboard/PerformanceCharts').then(m => m.PerformanceCharts),
+  { ssr: false, loading: () => <div className="h-48 flex items-center justify-center"><p className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant/40">読み込み中...</p></div> }
+);
 
 export default function StatsPage() {
   useBgm();
@@ -24,9 +30,12 @@ export default function StatsPage() {
   const totalLessons = LESSONS.length;
   const completedLessons = Object.values(progress.lessons).filter(l => l.completed).length;
 
-  // CPS stats (bestKpm field now stores CPS)
+  // タイプ速度 stats (bestKpm field stores CPS)
   const allCps = Object.values(progress.lessons).map(l => l.bestKpm).filter(k => k > 0);
   const peakCps = allCps.length > 0 ? Math.max(...allCps).toFixed(1) : '0.0';
+  const avgCps = allCps.length > 0
+    ? (allCps.reduce((a, b) => a + b, 0) / allCps.length).toFixed(1)
+    : '0.0';
 
   const allAccuracies = Object.values(progress.lessons).map(l => l.bestAccuracy).filter(a => a > 0);
   const avgAccuracy = allAccuracies.length > 0
@@ -39,7 +48,7 @@ export default function StatsPage() {
     .sort((a, b) => a.date.localeCompare(b.date))
     .slice(-20);
 
-  const chartData = allHistory.map((h, i) => ({ i, cps: h.kpm, acc: h.accuracy }));
+  const chartData = allHistory.map((h, i) => ({ session: `${i + 1}`, CPS: Math.round(h.kpm * 10) / 10, 正確率: Math.round(h.accuracy) }));
 
   // Session history (most recent completed lessons)
   const recentSessions = Object.values(progress.lessons)
@@ -62,73 +71,32 @@ export default function StatsPage() {
 
       {/* Main grid: chart + right cards */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* CPS progression chart */}
-        <div className="lg:col-span-8 glass-card p-7 rounded-lg border border-[#464555]/5 relative overflow-visible">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="font-headline text-xl font-bold text-on-surface">CPS 推移</h2>
-          </div>
-          <div className="w-full h-48 relative overflow-visible">
-            {chartData.length >= 2 ? (
-              <svg className="w-full h-full overflow-visible" viewBox="0 0 800 200" preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="cpsGradient" x1="0" x2="0" y1="0" y2="1">
-                    <stop offset="0%" stopColor="#c0c1ff" stopOpacity="0.3" />
-                    <stop offset="100%" stopColor="#c0c1ff" stopOpacity="0" />
-                  </linearGradient>
-                </defs>
-                {(() => {
-                  const vals = chartData.map(d => d.cps);
-                  const max = Math.max(...vals, 0.1);
-                  const pts = vals.map((v, i) => {
-                    const x = (i / (vals.length - 1)) * 800;
-                    const y = 160 - (v / max) * 140;
-                    return `${x},${y}`;
-                  });
-                  const ptsStr = pts.join(' ');
-                  const areaStr = `${ptsStr} 800,200 0,200`;
-                  const peakIdx = vals.indexOf(Math.max(...vals));
-                  const peakX = (peakIdx / (vals.length - 1)) * 800;
-                  const peakY = 160 - (vals[peakIdx] / max) * 140;
-                  // Clamp popup x so it doesn't overflow
-                  const popupX = Math.min(Math.max(peakX, 65), 735);
-                  return (
-                    <>
-                      <line x1="0" x2="800" y1="60" y2="60" stroke="#464555" strokeOpacity="0.2" />
-                      <line x1="0" x2="800" y1="120" y2="120" stroke="#464555" strokeOpacity="0.2" />
-                      <line x1="0" x2="800" y1="180" y2="180" stroke="#464555" strokeOpacity="0.2" />
-                      <polygon points={areaStr} fill="url(#cpsGradient)" />
-                      <polyline points={ptsStr} fill="none" stroke="#c0c1ff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                      {/* Peak marker — drawn last so it appears on top */}
-                      <circle cx={peakX} cy={peakY} r="5" fill="#c0c1ff" />
-                      <rect x={popupX - 60} y={peakY - 42} width="120" height="32" rx="6" fill="rgba(23,31,51,0.95)" stroke="#c0c1ff" strokeWidth="1" strokeOpacity="0.4" />
-                      <text x={popupX} y={peakY - 26} textAnchor="middle" fill="#c7c4d8" fontSize="9" fontFamily="sans-serif">最高記録</text>
-                      <text x={popupX} y={peakY - 14} textAnchor="middle" fill="#c0c1ff" fontSize="12" fontWeight="bold" fontFamily="sans-serif">{vals[peakIdx].toFixed(1)} CPS</text>
-                    </>
-                  );
-                })()}
-              </svg>
-            ) : (
-              <div className="flex items-center justify-center h-full">
-                <p className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant/40">データがまだありません</p>
-              </div>
-            )}
-          </div>
+        {/* タイプ速度 + 正確率 推移グラフ */}
+        <div className="lg:col-span-8">
+          {chartData.length >= 2 ? (
+            <PerformanceCharts chartData={chartData} avgCps={avgCps} avgAccuracy={avgAccuracy} />
+          ) : (
+            <div className="glass-card p-7 rounded-lg border border-[#464555]/5 flex items-center justify-center h-48">
+              <p className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant/40">データがまだありません</p>
+            </div>
+          )}
         </div>
 
         {/* Right stats cards */}
         <div className="lg:col-span-4 flex flex-col gap-4">
           {[
-            { icon: 'speed', label: '最高 CPS', value: peakCps, accent: 'text-primary', bg: 'bg-primary/10' },
-            { icon: 'verified', label: '平均正確率', value: `${avgAccuracy}%`, accent: 'text-secondary', bg: 'bg-secondary/10' },
+            { icon: 'speed', label: '最高 タイプ速度', value: `${peakCps} キー/秒`, accent: 'text-primary', bg: 'bg-primary/10' },
+            { icon: 'trending_up', label: '平均 タイプ速度', value: `${avgCps} キー/秒`, accent: 'text-[#c0c1ff]', bg: 'bg-[#c0c1ff]/10' },
+            { icon: 'verified', label: '平均 正確率', value: `${avgAccuracy}%`, accent: 'text-secondary', bg: 'bg-secondary/10' },
             { icon: 'school', label: '完了レッスン', value: `${completedLessons} / ${totalLessons}`, accent: 'text-tertiary', bg: 'bg-tertiary/10' },
           ].map(item => (
-            <div key={item.label} className="flex-1 glass-card p-5 rounded-lg flex items-center gap-5 border border-[#464555]/5 hover:bg-surface-container-high/60 transition-all">
-              <div className={`w-12 h-12 rounded-2xl ${item.bg} flex items-center justify-center ${item.accent} flex-shrink-0`}>
-                <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>{item.icon}</span>
+            <div key={item.label} className="flex-1 glass-card p-4 rounded-lg flex items-center gap-4 border border-[#464555]/5 hover:bg-surface-container-high/60 transition-all">
+              <div className={`w-10 h-10 rounded-2xl ${item.bg} flex items-center justify-center ${item.accent} flex-shrink-0`}>
+                <span className="material-symbols-outlined text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>{item.icon}</span>
               </div>
               <div>
-                <p className="font-label text-xs uppercase tracking-tighter text-on-surface-variant">{item.label}</p>
-                <h4 className="font-headline text-3xl font-bold text-on-surface">{item.value}</h4>
+                <p className="font-label text-[10px] uppercase tracking-tighter text-on-surface-variant">{item.label}</p>
+                <h4 className="font-headline text-xl font-bold text-on-surface">{item.value}</h4>
               </div>
             </div>
           ))}
@@ -163,7 +131,7 @@ export default function StatsPage() {
               <thead>
                 <tr className="bg-surface-container-high/50 border-b border-[#464555]/10">
                   <th className="px-5 py-3 font-label text-[10px] uppercase tracking-widest text-on-surface-variant">レッスン</th>
-                  <th className="px-5 py-3 font-label text-[10px] uppercase tracking-widest text-on-surface-variant">速度（CPS）</th>
+                  <th className="px-5 py-3 font-label text-[10px] uppercase tracking-widest text-on-surface-variant">タイプ速度</th>
                   <th className="px-5 py-3 font-label text-[10px] uppercase tracking-widest text-on-surface-variant">正確率</th>
                   <th className="px-5 py-3 font-label text-[10px] uppercase tracking-widest text-on-surface-variant">日時</th>
                 </tr>
@@ -210,7 +178,7 @@ export default function StatsPage() {
                   {h.duration === 60 ? '1分' : h.duration === 180 ? '3分' : '5分'} テスト
                 </p>
                 <p className="font-headline text-3xl font-bold text-primary">{h.kpm.toFixed(1)}</p>
-                <p className="font-label text-[10px] text-on-surface-variant uppercase mb-1">CPS</p>
+                <p className="font-label text-[10px] text-on-surface-variant uppercase mb-1">キー/秒</p>
                 <p className="font-headline text-lg font-bold text-secondary">{h.accuracy.toFixed(1)}%</p>
                 <p className="font-label text-[10px] text-on-surface-variant uppercase">正確率</p>
                 <p className="font-label text-[10px] text-on-surface-variant/50 mt-2">
