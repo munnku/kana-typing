@@ -54,8 +54,35 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* Bottom: Settings */}
+      {/* Bottom: Info links + Settings */}
       <div className="mt-auto pt-6 border-t border-[#464555]/10 space-y-2">
+        {[
+          { href: '/about',       icon: 'info',  label: 'このアプリについて' },
+          { href: '/how-to-use',  icon: 'help',  label: '使い方' },
+        ].map(item => {
+          const isActive = pathname === item.href;
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`flex items-center gap-4 p-3 rounded-xl font-headline text-sm font-medium tracking-tight transition-all duration-150 ${
+                isActive
+                  ? 'bg-[#2d3449] text-secondary'
+                  : 'text-[#c7c4d8] opacity-70 hover:bg-[#2d3449] hover:opacity-100 hover:text-white'
+              }`}
+            >
+              <span
+                className="material-symbols-outlined flex-shrink-0"
+                style={isActive ? { fontVariationSettings: "'FILL' 1" } : undefined}
+              >
+                {item.icon}
+              </span>
+              <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap overflow-hidden">
+                {item.label}
+              </span>
+            </Link>
+          );
+        })}
         <Link
           href="/settings"
           className={`flex items-center gap-4 p-3 rounded-xl font-headline text-sm font-medium tracking-tight transition-all duration-150 ${
@@ -64,7 +91,12 @@ export function Sidebar() {
               : 'text-[#c7c4d8] opacity-70 hover:bg-[#2d3449] hover:opacity-100 hover:text-white'
           }`}
         >
-          <span className="material-symbols-outlined flex-shrink-0">settings</span>
+          <span
+            className="material-symbols-outlined flex-shrink-0"
+            style={pathname === '/settings' ? { fontVariationSettings: "'FILL' 1" } : undefined}
+          >
+            settings
+          </span>
           <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap overflow-hidden">
             設定
           </span>
