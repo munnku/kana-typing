@@ -229,16 +229,16 @@ export default function ResultsPage() {
         {/* CTA actions */}
         <div className="max-w-md mx-auto space-y-3 pb-8">
           {nextLesson && (
-            <div className="flex flex-col gap-1">
-              <Link
-                href={`/lessons/${nextLesson.id}`}
-                className="gradient-primary w-full py-5 rounded-full font-headline font-extrabold text-lg text-on-primary flex items-center justify-center gap-3 transition-all active:scale-95 shadow-ambient hover:shadow-glow group"
-              >
+            <Link
+              href={`/lessons/${nextLesson.id}`}
+              className="gradient-primary w-full py-4 rounded-full font-headline font-extrabold text-lg text-on-primary flex flex-col items-center justify-center gap-0.5 transition-all active:scale-95 shadow-ambient hover:shadow-glow group"
+            >
+              <div className="flex items-center gap-3">
                 次のレッスン: {nextLesson.title}
                 <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
-              </Link>
-              <p className="text-center font-label text-[10px] text-on-surface-variant/40 uppercase tracking-widest">Space / Enter でも進む</p>
-            </div>
+              </div>
+              <span className="font-label text-[9px] text-on-primary/60 uppercase tracking-widest">Space / Enter</span>
+            </Link>
           )}
           <div className="grid grid-cols-2 gap-4">
             <Link
@@ -250,17 +250,14 @@ export default function ResultsPage() {
             </Link>
             <Link
               href="/lessons"
-              className="py-4 rounded-full font-headline font-bold text-sm text-on-surface transition-all active:scale-95 flex items-center justify-center gap-2 border border-[#464555]/20 bg-surface-container-high hover:bg-surface-container-highest"
+              className="py-4 rounded-full font-headline font-bold text-sm text-on-surface transition-all active:scale-95 flex flex-col items-center justify-center gap-0.5 border border-[#464555]/20 bg-surface-container-high hover:bg-surface-container-highest"
             >
-              <span className="material-symbols-outlined text-sm">grid_view</span>
-              一覧へ
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-sm">grid_view</span>
+                一覧へ
+              </div>
+              <span className="font-label text-[9px] text-on-surface-variant/50 uppercase tracking-widest">ESC</span>
             </Link>
-          </div>
-          <div className="grid grid-cols-2 gap-4 opacity-40">
-            <p className="text-center font-label text-[10px] text-on-surface-variant uppercase tracking-widest pt-1">← もう一度</p>
-            <p className="text-center font-label text-[10px] text-on-surface-variant uppercase tracking-widest pt-1">
-              <kbd className="font-mono">ESC</kbd> → 一覧へ
-            </p>
           </div>
         </div>
       </div>

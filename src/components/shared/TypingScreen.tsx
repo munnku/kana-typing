@@ -100,29 +100,31 @@ export function TypingScreen({
                   const absIdx = line.start + i;
                   const isCurrent = absIdx === cursorIndex;
                   if (char.kana === ' ') return <span key={absIdx} className="w-4 inline-block" />;
+                  const isError = char.state === 'error';
+                  const isCorrect = char.state === 'correct';
+                  const isCorrected = char.state === 'corrected';
                   return (
                     <span key={absIdx} className="inline-flex flex-col items-center relative">
                       <span className={clsx('text-[2rem] leading-tight px-1 rounded-xl transition-colors duration-75', {
-                        'bg-[#1a3a2a] text-[#7fffb8] relative': isCurrent && char.state !== 'error',
-                        'bg-error-container text-error': char.state === 'error',
-                        'text-secondary': char.state === 'correct',
-                        'text-on-surface-variant/40': char.state === 'pending',
-                        'text-tertiary': char.state === 'corrected',
+                        'text-blue-500': isCurrent && !isError,
+                        'text-error': isError,
+                        'text-[#16a34a]': isCorrect,
+                        'text-on-surface-variant/40': char.state === 'pending' || isCorrected,
                       })}>
                         {char.kana}
-                        {isCurrent && char.state !== 'error' && (
-                          <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-8 h-[3px] bg-secondary animate-caret-blink rounded-full shadow-glow-green" />
+                        {isCurrent && !isError && (
+                          <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-full h-[2px] bg-blue-500 rounded-full" />
                         )}
                       </span>
                       {showRomajiGuide && (
                         <span className={clsx('text-xs font-mono mt-1', {
-                          'text-[#7fffb8] font-bold': isCurrent,
-                          'text-secondary/60': char.state === 'correct',
-                          'text-error': char.state === 'error',
-                          'text-on-surface-variant/30': char.state === 'pending',
+                          'text-blue-500 font-bold': isCurrent && !isError,
+                          'text-error': isError,
+                          'text-[#16a34a]/70': isCorrect,
+                          'text-on-surface-variant/30': char.state === 'pending' || isCorrected,
                         })}>
-                          {isCurrent && char.typedRomaji
-                            ? <><span className="text-white font-bold">{char.typedRomaji}</span><span className="text-[#7fffb8]/70">{char.displayRomaji.slice(char.typedRomaji.length)}</span></>
+                          {isCurrent && char.typedRomaji && !isError
+                            ? <><span className="text-blue-600 font-bold">{char.typedRomaji}</span><span className="text-blue-500/70">{char.displayRomaji.slice(char.typedRomaji.length)}</span></>
                             : char.displayRomaji
                           }
                         </span>

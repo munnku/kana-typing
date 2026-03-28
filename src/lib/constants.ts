@@ -123,7 +123,7 @@ export const BADGE_DEFINITIONS: BadgeDefinition[] = [
 export const DEFAULT_SETTINGS: AppSettings = {
   showKeyboard: true,
   showFingerGuide: true,
-  soundEnabled: false,
+  soundEnabled: true,
   bgmEnabled: false,
   bgmTrack: 1,
   bgmVolume: 0.35,

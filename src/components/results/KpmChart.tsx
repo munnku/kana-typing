@@ -21,12 +21,12 @@ export function KpmChart({ history }: KpmChartProps) {
       <ResponsiveContainer width="100%" height={220}>
         <ComposedChart data={data} margin={{ top: 8, right: 16, bottom: 8, left: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(70,69,85,0.3)" />
-          <XAxis dataKey="回" tick={{ fontSize: 20, fill: '#918fa1' }} />
+          <XAxis dataKey="回" tick={{ fontSize: 15, fill: '#918fa1' }} />
           {/* 左軸: タイプ速度 */}
           <YAxis
             yAxisId="left"
-            tick={{ fontSize: 20, fill: '#c0c1ff' }}
-            label={{ value: 'キー/秒', angle: -90, position: 'insideLeft', offset: 16, style: { fontSize: 18, fill: '#c0c1ff' } }}
+            tick={{ fontSize: 15, fill: '#c0c1ff' }}
+            label={{ value: 'キー/秒', angle: -90, position: 'insideLeft', dy: 30, style: { fontSize: 14, fill: '#c0c1ff' } }}
             width={50}
           />
           {/* 右軸: 正確率 */}
@@ -34,8 +34,8 @@ export function KpmChart({ history }: KpmChartProps) {
             yAxisId="right"
             orientation="right"
             domain={[0, 100]}
-            tick={{ fontSize: 20, fill: '#4edea3' }}
-            label={{ value: '正確率%', angle: 90, position: 'insideRight', offset: 16, style: { fontSize: 18, fill: '#4edea3' } }}
+            tick={{ fontSize: 15, fill: '#4edea3' }}
+            label={{ value: '正確率%', angle: 90, position: 'insideRight', dy: -30, style: { fontSize: 14, fill: '#4edea3' } }}
             width={55}
           />
           <Tooltip

@@ -331,10 +331,13 @@ export default function TestPage() {
               </button>
               <button
                 onClick={() => setStatus('idle')}
-                className="py-4 rounded-full font-headline font-bold text-sm text-on-surface transition-all active:scale-95 flex items-center justify-center gap-2 border border-[#464555]/20 bg-surface-container-high hover:bg-surface-container-highest"
+                className="py-4 rounded-full font-headline font-bold text-sm text-on-surface transition-all active:scale-95 flex flex-col items-center justify-center gap-1 border border-[#464555]/20 bg-surface-container-high hover:bg-surface-container-highest"
               >
-                <span className="material-symbols-outlined text-sm">keyboard_backspace</span>
-                テスト選択
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-sm">keyboard_backspace</span>
+                  テスト選択
+                </div>
+                <span className="font-label text-[9px] text-on-surface-variant/50 uppercase tracking-widest">ESC</span>
               </button>
             </div>
           </div>
