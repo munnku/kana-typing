@@ -126,3 +126,20 @@ html.text-size-lg { font-size: 18px; }
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }
+
+/* ---- Tutorial slide animations ---- */
+@keyframes finger-tap {
+  0%, 70%, 100% { transform: translateY(0) scaleY(1); }
+  40%           { transform: translateY(3px) scaleY(0.94); }
+}
+@keyframes key-press {
+  0%, 70%, 100% { transform: translateY(0) scale(1);    box-shadow: 0 3px 0 rgba(0,0,0,0.25); }
+  40%           { transform: translateY(2px) scale(0.97); box-shadow: 0 1px 0 rgba(0,0,0,0.15); }
+}
+@keyframes key-glow {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.55; }
+}
+.animate-finger-tap  { animation: finger-tap  1.4s ease-in-out infinite; }
+.animate-key-press   { animation: key-press   1.4s ease-in-out infinite; }
+.animate-key-glow    { animation: key-glow    1.2s ease-in-out infinite; }

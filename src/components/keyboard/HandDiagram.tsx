@@ -62,7 +62,8 @@ function HandSVG({ side, activeFinger, className }: {
             fill={color}
             stroke={isActive ? FINGER_COLORS[finger] : '#9ca3af'}
             strokeWidth={isActive ? 2 : 1}
-            className="transition-all duration-200"
+            className={`transition-all duration-200 ${isActive ? 'animate-finger-tap' : ''}`}
+            style={{ transformOrigin: `${pos.x + pos.w / 2}px ${pos.y + pos.h}px` }}
           />
         );
       })}
