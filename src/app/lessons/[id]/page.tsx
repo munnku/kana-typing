@@ -132,12 +132,13 @@ function LessonRunner({ lesson }: { lesson: Lesson }) {
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
+      if (showTutorial) return; // スライド表示中はスライド側でキーを処理する
       if (e.key === 'Escape') { router.push('/lessons'); return; }
       if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); handleRestart(); }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [state.status, handleRestart, router]);
+  }, [state.status, handleRestart, router, showTutorial]);
 
   useEffect(() => {
     if (state.status !== 'complete') return;

@@ -15,8 +15,10 @@ export interface TutorialSlide {
   highlightKeys?: string[];
   /** 指の名前（オプション） */
   fingerHint?: string;
-  /** HandDiagram に渡すキー。指ハイライト表示に使う */
+  /** HandDiagram に渡すキー（単一）。指ハイライト表示に使う */
   handKey?: string;
+  /** HandDiagram に渡すキー（複数）。handKey より優先して全指をハイライト */
+  handKeys?: string[];
   /** KeyboardDiagram でハイライトするキー群 */
   keyboardKeys?: string[];
 }
@@ -36,7 +38,7 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
       title: '左手のホームポジション：F・D・S・A',
       body: '左手の指はそれぞれ\n小指 → A\n薬指 → S\n中指 → D\n人差し指 → F\nに置きます。Fキーには突起があります。',
       fingerHint: '左手 小指・薬指・中指・人差し指',
-      handKey: 'f',
+      handKeys: ['a', 's', 'd', 'f'],
       keyboardKeys: ['a', 's', 'd', 'f'],
     },
   ],
@@ -46,13 +48,13 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
       title: '右手のホームポジション：J・K・L・;',
       body: '右手の指はそれぞれ\n人差し指 → J\n中指 → K\n薬指 → L\n小指 → ;\nに置きます。Jキーにも突起があります。',
       fingerHint: '右手 人差し指・中指・薬指・小指',
-      handKey: 'j',
+      handKeys: ['j', 'k', 'l', ';'],
       keyboardKeys: ['j', 'k', 'l', ';'],
     },
     {
       title: '親指はスペースキー',
       body: '両手の親指はスペースキーの上に軽く置きます。日本語を入力するとき、単語の区切りに使います。',
-      handKey: ' ',
+      handKeys: [' '],
       keyboardKeys: [' '],
     },
   ],
@@ -64,13 +66,14 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
     {
       title: 'あ行のキー：a i u e o',
       body: 'あ行のローマ字は母音5文字だけです。\nあ → a　い → i　う → u\nえ → e　お → o',
+      handKeys: ['a', 'i', 'u', 'e', 'o'],
       keyboardKeys: ['a', 'i', 'u', 'e', 'o'],
     },
     {
       title: '「あ」の打ち方',
       body: '「あ」は「a」と入力します。\nAキーは左手の小指で打ちます。\nホームポジションのキーです。',
       fingerHint: '左手 小指',
-      handKey: 'a',
+      handKeys: ['a'],
       keyboardKeys: ['a'],
     },
   ],
@@ -80,7 +83,7 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
       title: '「い」の打ち方',
       body: '「い」は「i」と入力します。\nIキーは右手の中指で打ちます。\n上段（トップ行）にあります。',
       fingerHint: '右手 中指',
-      handKey: 'i',
+      handKeys: ['i'],
       keyboardKeys: ['i'],
     },
   ],
@@ -90,7 +93,7 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
       title: '「う」の打ち方',
       body: '「う」は「u」と入力します。\nUキーは右手の人差し指で打ちます。\n上段（トップ行）にあります。',
       fingerHint: '右手 人差し指',
-      handKey: 'u',
+      handKeys: ['u'],
       keyboardKeys: ['u'],
     },
   ],
@@ -100,7 +103,7 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
       title: '「え」の打ち方',
       body: '「え」は「e」と入力します。\nEキーは左手の中指で打ちます。\n上段（トップ行）にあります。',
       fingerHint: '左手 中指',
-      handKey: 'e',
+      handKeys: ['e'],
       keyboardKeys: ['e'],
     },
   ],
@@ -110,7 +113,7 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
       title: '「お」の打ち方',
       body: '「お」は「o」と入力します。\nOキーは右手の薬指で打ちます。\n上段（トップ行）にあります。',
       fingerHint: '右手 薬指',
-      handKey: 'o',
+      handKeys: ['o'],
       keyboardKeys: ['o'],
     },
   ],
@@ -122,13 +125,14 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
     {
       title: 'か行のキー：k + 母音',
       body: 'か行は「k」の後に母音をつけます。\nか → ka　き → ki　く → ku\nけ → ke　こ → ko',
+      handKeys: ['k', 'a', 'i', 'u', 'e', 'o'],
       keyboardKeys: ['k', 'a', 'i', 'u', 'e', 'o'],
     },
     {
       title: '「か」の打ち方',
-      body: '「か」は「k」→「a」と入力します。\nKキーは右手の中指で打ちます。\nホームポジションのJキーの右隣です。',
-      fingerHint: '右手 中指',
-      handKey: 'k',
+      body: '「か」は「k」→「a」と入力します。\nKキー（右手 中指）→ Aキー（左手 小指）の順に打ちます。',
+      fingerHint: '右手 中指 → 左手 小指',
+      handKeys: ['k', 'a'],
       keyboardKeys: ['k', 'a'],
     },
   ],
@@ -136,9 +140,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u2-l02': [
     {
       title: '「き」の打ち方',
-      body: '「き」は「k」→「i」と入力します。\nKキー（右手 中指）の後にIキー（右手 中指）を打ちます。',
+      body: '「き」は「k」→「i」と入力します。\nKキー（右手 中指）→ Iキー（右手 中指）の順に打ちます。',
       fingerHint: '右手 中指',
-      handKey: 'k',
+      handKeys: ['k', 'i'],
       keyboardKeys: ['k', 'i'],
     },
   ],
@@ -146,9 +150,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u2-l03': [
     {
       title: '「く」の打ち方',
-      body: '「く」は「k」→「u」と入力します。\nKキー（右手 中指）の後にUキー（右手 人差し指）を打ちます。',
-      fingerHint: '右手 中指',
-      handKey: 'k',
+      body: '「く」は「k」→「u」と入力します。\nKキー（右手 中指）→ Uキー（右手 人差し指）の順に打ちます。',
+      fingerHint: '右手 中指 → 右手 人差し指',
+      handKeys: ['k', 'u'],
       keyboardKeys: ['k', 'u'],
     },
   ],
@@ -156,9 +160,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u2-l04': [
     {
       title: '「け」の打ち方',
-      body: '「け」は「k」→「e」と入力します。\nKキー（右手 中指）の後にEキー（左手 中指）を打ちます。',
-      fingerHint: '右手 中指',
-      handKey: 'k',
+      body: '「け」は「k」→「e」と入力します。\nKキー（右手 中指）→ Eキー（左手 中指）の順に打ちます。',
+      fingerHint: '右手 中指 → 左手 中指',
+      handKeys: ['k', 'e'],
       keyboardKeys: ['k', 'e'],
     },
   ],
@@ -166,9 +170,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u2-l05': [
     {
       title: '「こ」の打ち方',
-      body: '「こ」は「k」→「o」と入力します。\nKキー（右手 中指）の後にOキー（右手 薬指）を打ちます。',
-      fingerHint: '右手 中指',
-      handKey: 'k',
+      body: '「こ」は「k」→「o」と入力します。\nKキー（右手 中指）→ Oキー（右手 薬指）の順に打ちます。',
+      fingerHint: '右手 中指 → 右手 薬指',
+      handKeys: ['k', 'o'],
       keyboardKeys: ['k', 'o'],
     },
   ],
@@ -179,14 +183,15 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u3-l01': [
     {
       title: 'さ行のキー：s + 母音',
-      body: 'さ行は「s」の後に母音をつけます。\nさ → sa　し → si または shi\nす → su　せ → se　そ → so\n「し」は shi でも入力できます。',
+      body: 'さ行は「s」の後に母音をつけます。\nさ → sa　し → si（または shi）\nす → su　せ → se　そ → so',
+      handKeys: ['s', 'h', 'a', 'i', 'u', 'e', 'o'],
       keyboardKeys: ['s', 'h', 'a', 'i', 'u', 'e', 'o'],
     },
     {
       title: '「さ」の打ち方',
-      body: '「さ」は「s」→「a」と入力します。\nSキーは左手の薬指で打ちます。\nホームポジションのAキーの右隣にあります。',
-      fingerHint: '左手 薬指',
-      handKey: 's',
+      body: '「さ」は「s」→「a」と入力します。\nSキー（左手 薬指）→ Aキー（左手 小指）の順に打ちます。',
+      fingerHint: '左手 薬指 → 左手 小指',
+      handKeys: ['s', 'a'],
       keyboardKeys: ['s', 'a'],
     },
   ],
@@ -194,9 +199,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u3-l02': [
     {
       title: '「し」の打ち方',
-      body: '「し」は「s」→「i」または「s」→「h」→「i」と入力します。\nSキーは左手の薬指、Hキーは右手の人差し指です。',
-      fingerHint: '左手 薬指',
-      handKey: 's',
+      body: '「し」は「si」または「shi」と入力できます。\nsi: Sキー（左手 薬指）→ Iキー（右手 中指）\nshi: Sキー → Hキー（右手 人差し指）→ Iキー',
+      fingerHint: '左手 薬指 → 右手',
+      handKeys: ['s', 'h', 'i'],
       keyboardKeys: ['s', 'h', 'i'],
     },
   ],
@@ -204,9 +209,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u3-l03': [
     {
       title: '「す」の打ち方',
-      body: '「す」は「s」→「u」と入力します。\nSキー（左手 薬指）の後にUキー（右手 人差し指）を打ちます。',
-      fingerHint: '左手 薬指',
-      handKey: 's',
+      body: '「す」は「s」→「u」と入力します。\nSキー（左手 薬指）→ Uキー（右手 人差し指）の順に打ちます。',
+      fingerHint: '左手 薬指 → 右手 人差し指',
+      handKeys: ['s', 'u'],
       keyboardKeys: ['s', 'u'],
     },
   ],
@@ -214,9 +219,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u3-l04': [
     {
       title: '「せ」の打ち方',
-      body: '「せ」は「s」→「e」と入力します。\nSキー（左手 薬指）の後にEキー（左手 中指）を打ちます。',
-      fingerHint: '左手 薬指',
-      handKey: 's',
+      body: '「せ」は「s」→「e」と入力します。\nSキー（左手 薬指）→ Eキー（左手 中指）の順に打ちます。',
+      fingerHint: '左手 薬指 → 左手 中指',
+      handKeys: ['s', 'e'],
       keyboardKeys: ['s', 'e'],
     },
   ],
@@ -224,9 +229,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u3-l05': [
     {
       title: '「そ」の打ち方',
-      body: '「そ」は「s」→「o」と入力します。\nSキー（左手 薬指）の後にOキー（右手 薬指）を打ちます。',
-      fingerHint: '左手 薬指',
-      handKey: 's',
+      body: '「そ」は「s」→「o」と入力します。\nSキー（左手 薬指）→ Oキー（右手 薬指）の順に打ちます。',
+      fingerHint: '左手 薬指 → 右手 薬指',
+      handKeys: ['s', 'o'],
       keyboardKeys: ['s', 'o'],
     },
   ],
@@ -236,15 +241,16 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   // ─────────────────────────────────────────────
   'u4-l01': [
     {
-      title: 'た行のキー：t / ch / ts + 母音',
-      body: 'た行は「t」の後に母音をつけます。\nた → ta　ち → ti または chi\nつ → tu または tsu\nて → te　と → to',
+      title: 'た行のキー：t + 母音',
+      body: 'た行は「t」の後に母音をつけます。\nた → ta　ち → ti（または chi）\nつ → tu（または tsu）　て → te　と → to',
+      handKeys: ['t', 'c', 'h', 's', 'a', 'i', 'u', 'e', 'o'],
       keyboardKeys: ['t', 'c', 'h', 's', 'a', 'i', 'u', 'e', 'o'],
     },
     {
       title: '「た」の打ち方',
-      body: '「た」は「t」→「a」と入力します。\nTキーは左手の人差し指で打ちます。\nホームポジションのFキーから一つ上の行にあります。',
-      fingerHint: '左手 人差し指',
-      handKey: 't',
+      body: '「た」は「t」→「a」と入力します。\nTキー（左手 人差し指）→ Aキー（左手 小指）の順に打ちます。',
+      fingerHint: '左手 人差し指 → 左手 小指',
+      handKeys: ['t', 'a'],
       keyboardKeys: ['t', 'a'],
     },
   ],
@@ -252,9 +258,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u4-l02': [
     {
       title: '「ち」の打ち方',
-      body: '「ち」は「t」→「i」または「c」→「h」→「i」と入力します。\nTキーは左手の人差し指、Cキーは左手の中指です。',
-      fingerHint: '左手 人差し指',
-      handKey: 't',
+      body: '「ち」は「ti」または「chi」と入力できます。\nti: Tキー（左手 人差し指）→ Iキー（右手 中指）\nchi: Cキー（左手 中指）→ Hキー → Iキー',
+      fingerHint: '左手 → 右手',
+      handKeys: ['t', 'c', 'h', 'i'],
       keyboardKeys: ['t', 'c', 'h', 'i'],
     },
   ],
@@ -262,9 +268,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u4-l03': [
     {
       title: '「つ」の打ち方',
-      body: '「つ」は「t」→「u」または「t」→「s」→「u」と入力します。\nどちらも左手から始まります。',
-      fingerHint: '左手 人差し指',
-      handKey: 't',
+      body: '「つ」は「tu」または「tsu」と入力できます。\ntu: Tキー（左手 人差し指）→ Uキー（右手 人差し指）\ntsu: Tキー → Sキー → Uキー',
+      fingerHint: '左手 人差し指 → 右手',
+      handKeys: ['t', 's', 'u'],
       keyboardKeys: ['t', 's', 'u'],
     },
   ],
@@ -272,9 +278,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u4-l04': [
     {
       title: '「て」の打ち方',
-      body: '「て」は「t」→「e」と入力します。\nTキー（左手 人差し指）の後にEキー（左手 中指）を打ちます。',
-      fingerHint: '左手 人差し指',
-      handKey: 't',
+      body: '「て」は「t」→「e」と入力します。\nTキー（左手 人差し指）→ Eキー（左手 中指）の順に打ちます。',
+      fingerHint: '左手 人差し指 → 左手 中指',
+      handKeys: ['t', 'e'],
       keyboardKeys: ['t', 'e'],
     },
   ],
@@ -282,9 +288,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u4-l05': [
     {
       title: '「と」の打ち方',
-      body: '「と」は「t」→「o」と入力します。\nTキー（左手 人差し指）の後にOキー（右手 薬指）を打ちます。',
-      fingerHint: '左手 人差し指',
-      handKey: 't',
+      body: '「と」は「t」→「o」と入力します。\nTキー（左手 人差し指）→ Oキー（右手 薬指）の順に打ちます。',
+      fingerHint: '左手 人差し指 → 右手 薬指',
+      handKeys: ['t', 'o'],
       keyboardKeys: ['t', 'o'],
     },
   ],
@@ -295,14 +301,15 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u5-l01': [
     {
       title: 'な行のキー：n + 母音',
-      body: 'な行は「n」の後に母音をつけます。\nな → na　に → ni　ぬ → nu\nね → ne　の → no\n単独の「ん」は nn と入力します。',
+      body: 'な行は「n」の後に母音をつけます。\nな → na　に → ni　ぬ → nu\nね → ne　の → no\n単独の「ん」は「nn」と入力します。',
+      handKeys: ['n', 'a', 'i', 'u', 'e', 'o'],
       keyboardKeys: ['n', 'a', 'i', 'u', 'e', 'o'],
     },
     {
       title: '「な」の打ち方',
-      body: '「な」は「n」→「a」と入力します。\nNキーは右手の人差し指で打ちます。\nホームポジションのJキーの上の行にあります。',
-      fingerHint: '右手 人差し指',
-      handKey: 'n',
+      body: '「な」は「n」→「a」と入力します。\nNキー（右手 人差し指）→ Aキー（左手 小指）の順に打ちます。',
+      fingerHint: '右手 人差し指 → 左手 小指',
+      handKeys: ['n', 'a'],
       keyboardKeys: ['n', 'a'],
     },
   ],
@@ -310,9 +317,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u5-l02': [
     {
       title: '「に」の打ち方',
-      body: '「に」は「n」→「i」と入力します。\nNキー（右手 人差し指）の後にIキー（右手 中指）を打ちます。',
-      fingerHint: '右手 人差し指',
-      handKey: 'n',
+      body: '「に」は「n」→「i」と入力します。\nNキー（右手 人差し指）→ Iキー（右手 中指）の順に打ちます。',
+      fingerHint: '右手 人差し指 → 右手 中指',
+      handKeys: ['n', 'i'],
       keyboardKeys: ['n', 'i'],
     },
   ],
@@ -320,9 +327,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u5-l03': [
     {
       title: '「ぬ」の打ち方',
-      body: '「ぬ」は「n」→「u」と入力します。\nNキー（右手 人差し指）の後にUキー（右手 人差し指）を打ちます。',
+      body: '「ぬ」は「n」→「u」と入力します。\nNキー（右手 人差し指）→ Uキー（右手 人差し指）の順に打ちます。',
       fingerHint: '右手 人差し指',
-      handKey: 'n',
+      handKeys: ['n', 'u'],
       keyboardKeys: ['n', 'u'],
     },
   ],
@@ -330,9 +337,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u5-l04': [
     {
       title: '「ね」の打ち方',
-      body: '「ね」は「n」→「e」と入力します。\nNキー（右手 人差し指）の後にEキー（左手 中指）を打ちます。',
-      fingerHint: '右手 人差し指',
-      handKey: 'n',
+      body: '「ね」は「n」→「e」と入力します。\nNキー（右手 人差し指）→ Eキー（左手 中指）の順に打ちます。',
+      fingerHint: '右手 人差し指 → 左手 中指',
+      handKeys: ['n', 'e'],
       keyboardKeys: ['n', 'e'],
     },
   ],
@@ -340,9 +347,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u5-l05': [
     {
       title: '「の」の打ち方',
-      body: '「の」は「n」→「o」と入力します。\nNキー（右手 人差し指）の後にOキー（右手 薬指）を打ちます。',
-      fingerHint: '右手 人差し指',
-      handKey: 'n',
+      body: '「の」は「n」→「o」と入力します。\nNキー（右手 人差し指）→ Oキー（右手 薬指）の順に打ちます。',
+      fingerHint: '右手 人差し指 → 右手 薬指',
+      handKeys: ['n', 'o'],
       keyboardKeys: ['n', 'o'],
     },
   ],
@@ -353,14 +360,15 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u6-l01': [
     {
       title: 'は行のキー：h + 母音',
-      body: 'は行は「h」の後に母音をつけます。\nは → ha　ひ → hi　ふ → fu または hu\nへ → he　ほ → ho',
+      body: 'は行は「h」の後に母音をつけます。\nは → ha　ひ → hi\nふ → fu（または hu）　へ → he　ほ → ho',
+      handKeys: ['h', 'f', 'a', 'i', 'u', 'e', 'o'],
       keyboardKeys: ['h', 'f', 'a', 'i', 'u', 'e', 'o'],
     },
     {
       title: '「は」の打ち方',
-      body: '「は」は「h」→「a」と入力します。\nHキーは右手の人差し指で打ちます。\nホームポジションのJキーの左隣にあります。',
-      fingerHint: '右手 人差し指',
-      handKey: 'h',
+      body: '「は」は「h」→「a」と入力します。\nHキー（右手 人差し指）→ Aキー（左手 小指）の順に打ちます。',
+      fingerHint: '右手 人差し指 → 左手 小指',
+      handKeys: ['h', 'a'],
       keyboardKeys: ['h', 'a'],
     },
   ],
@@ -368,9 +376,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u6-l02': [
     {
       title: '「ひ」の打ち方',
-      body: '「ひ」は「h」→「i」と入力します。\nHキー（右手 人差し指）の後にIキー（右手 中指）を打ちます。',
-      fingerHint: '右手 人差し指',
-      handKey: 'h',
+      body: '「ひ」は「h」→「i」と入力します。\nHキー（右手 人差し指）→ Iキー（右手 中指）の順に打ちます。',
+      fingerHint: '右手 人差し指 → 右手 中指',
+      handKeys: ['h', 'i'],
       keyboardKeys: ['h', 'i'],
     },
   ],
@@ -378,9 +386,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u6-l03': [
     {
       title: '「ふ」の打ち方',
-      body: '「ふ」は「f」→「u」または「h」→「u」と入力します。\nFキーは左手の人差し指、Hキーは右手の人差し指です。',
-      fingerHint: '左手 人差し指',
-      handKey: 'f',
+      body: '「ふ」は「fu」または「hu」と入力できます。\nfu: Fキー（左手 人差し指）→ Uキー（右手 人差し指）\nhu: Hキー（右手 人差し指）→ Uキー',
+      fingerHint: '左手 人差し指 → 右手 人差し指',
+      handKeys: ['f', 'h', 'u'],
       keyboardKeys: ['f', 'h', 'u'],
     },
   ],
@@ -388,9 +396,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u6-l04': [
     {
       title: '「へ」の打ち方',
-      body: '「へ」は「h」→「e」と入力します。\nHキー（右手 人差し指）の後にEキー（左手 中指）を打ちます。',
-      fingerHint: '右手 人差し指',
-      handKey: 'h',
+      body: '「へ」は「h」→「e」と入力します。\nHキー（右手 人差し指）→ Eキー（左手 中指）の順に打ちます。',
+      fingerHint: '右手 人差し指 → 左手 中指',
+      handKeys: ['h', 'e'],
       keyboardKeys: ['h', 'e'],
     },
   ],
@@ -398,9 +406,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u6-l05': [
     {
       title: '「ほ」の打ち方',
-      body: '「ほ」は「h」→「o」と入力します。\nHキー（右手 人差し指）の後にOキー（右手 薬指）を打ちます。',
-      fingerHint: '右手 人差し指',
-      handKey: 'h',
+      body: '「ほ」は「h」→「o」と入力します。\nHキー（右手 人差し指）→ Oキー（右手 薬指）の順に打ちます。',
+      fingerHint: '右手 人差し指 → 右手 薬指',
+      handKeys: ['h', 'o'],
       keyboardKeys: ['h', 'o'],
     },
   ],
@@ -412,13 +420,14 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
     {
       title: 'ま行のキー：m + 母音',
       body: 'ま行は「m」の後に母音をつけます。\nま → ma　み → mi　む → mu\nめ → me　も → mo',
+      handKeys: ['m', 'a', 'i', 'u', 'e', 'o'],
       keyboardKeys: ['m', 'a', 'i', 'u', 'e', 'o'],
     },
     {
       title: '「ま」の打ち方',
-      body: '「ま」は「m」→「a」と入力します。\nMキーは右手の人差し指で打ちます。\n一番下の行（底段）のNキーの右隣にあります。',
-      fingerHint: '右手 人差し指',
-      handKey: 'm',
+      body: '「ま」は「m」→「a」と入力します。\nMキー（右手 人差し指）→ Aキー（左手 小指）の順に打ちます。',
+      fingerHint: '右手 人差し指 → 左手 小指',
+      handKeys: ['m', 'a'],
       keyboardKeys: ['m', 'a'],
     },
   ],
@@ -426,9 +435,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u7-l02': [
     {
       title: '「み」の打ち方',
-      body: '「み」は「m」→「i」と入力します。\nMキー（右手 人差し指）の後にIキー（右手 中指）を打ちます。',
-      fingerHint: '右手 人差し指',
-      handKey: 'm',
+      body: '「み」は「m」→「i」と入力します。\nMキー（右手 人差し指）→ Iキー（右手 中指）の順に打ちます。',
+      fingerHint: '右手 人差し指 → 右手 中指',
+      handKeys: ['m', 'i'],
       keyboardKeys: ['m', 'i'],
     },
   ],
@@ -436,9 +445,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u7-l03': [
     {
       title: '「む」の打ち方',
-      body: '「む」は「m」→「u」と入力します。\nMキー（右手 人差し指）の後にUキー（右手 人差し指）を打ちます。',
+      body: '「む」は「m」→「u」と入力します。\nMキー（右手 人差し指）→ Uキー（右手 人差し指）の順に打ちます。',
       fingerHint: '右手 人差し指',
-      handKey: 'm',
+      handKeys: ['m', 'u'],
       keyboardKeys: ['m', 'u'],
     },
   ],
@@ -446,9 +455,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u7-l04': [
     {
       title: '「め」の打ち方',
-      body: '「め」は「m」→「e」と入力します。\nMキー（右手 人差し指）の後にEキー（左手 中指）を打ちます。',
-      fingerHint: '右手 人差し指',
-      handKey: 'm',
+      body: '「め」は「m」→「e」と入力します。\nMキー（右手 人差し指）→ Eキー（左手 中指）の順に打ちます。',
+      fingerHint: '右手 人差し指 → 左手 中指',
+      handKeys: ['m', 'e'],
       keyboardKeys: ['m', 'e'],
     },
   ],
@@ -456,9 +465,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u7-l05': [
     {
       title: '「も」の打ち方',
-      body: '「も」は「m」→「o」と入力します。\nMキー（右手 人差し指）の後にOキー（右手 薬指）を打ちます。',
-      fingerHint: '右手 人差し指',
-      handKey: 'm',
+      body: '「も」は「m」→「o」と入力します。\nMキー（右手 人差し指）→ Oキー（右手 薬指）の順に打ちます。',
+      fingerHint: '右手 人差し指 → 右手 薬指',
+      handKeys: ['m', 'o'],
       keyboardKeys: ['m', 'o'],
     },
   ],
@@ -470,13 +479,14 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
     {
       title: 'や行・わ行・んのキー',
       body: 'や行・わ行・んは以下のキーで入力します。\nや → ya　ゆ → yu　よ → yo\nわ → wa　を → wo　ん → nn',
+      handKeys: ['y', 'w', 'n', 'a', 'u', 'o'],
       keyboardKeys: ['y', 'w', 'n', 'a', 'u', 'o'],
     },
     {
       title: 'や行の打ち方',
-      body: 'や → y + a\nゆ → y + u\nよ → y + o\nYキーは左手の人差し指で打ちます。Fキーの上の行にあります。',
-      fingerHint: '左手 人差し指',
-      handKey: 'y',
+      body: 'や → y + a　ゆ → y + u　よ → y + o\nYキー（左手 人差し指）→ 母音キーの順に打ちます。\nFキーの右上の行にあります。',
+      fingerHint: '左手 人差し指 → 母音キー',
+      handKeys: ['y', 'a', 'u', 'o'],
       keyboardKeys: ['y', 'a', 'u', 'o'],
     },
   ],
@@ -484,9 +494,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u8-l02': [
     {
       title: 'わ行・んの打ち方',
-      body: 'わ → w + a\nを → w + o\nん → n + n\nWキーは左手の薬指、Nキーは右手の人差し指です。',
-      fingerHint: '左手 薬指',
-      handKey: 'w',
+      body: 'わ → w + a　を → w + o\nん → n + n（同じキーを2回）\nWキー（左手 薬指）、Nキー（右手 人差し指）',
+      fingerHint: '左手 薬指 / 右手 人差し指',
+      handKeys: ['w', 'n', 'a', 'o'],
       keyboardKeys: ['w', 'n', 'a', 'o'],
     },
   ],
@@ -498,13 +508,14 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
     {
       title: 'ら行のキー：r + 母音',
       body: 'ら行は「r」の後に母音をつけます。\nら → ra　り → ri　る → ru\nれ → re　ろ → ro',
+      handKeys: ['r', 'a', 'i', 'u', 'e', 'o'],
       keyboardKeys: ['r', 'a', 'i', 'u', 'e', 'o'],
     },
     {
       title: '「ら」の打ち方',
-      body: '「ら」は「r」→「a」と入力します。\nRキーは左手の人差し指で打ちます。\nFキーの上の行にあります。',
-      fingerHint: '左手 人差し指',
-      handKey: 'r',
+      body: '「ら」は「r」→「a」と入力します。\nRキー（左手 人差し指）→ Aキー（左手 小指）の順に打ちます。',
+      fingerHint: '左手 人差し指 → 左手 小指',
+      handKeys: ['r', 'a'],
       keyboardKeys: ['r', 'a'],
     },
   ],
@@ -512,9 +523,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u9-l02': [
     {
       title: '「り」の打ち方',
-      body: '「り」は「r」→「i」と入力します。\nRキー（左手 人差し指）の後にIキー（右手 中指）を打ちます。',
-      fingerHint: '左手 人差し指',
-      handKey: 'r',
+      body: '「り」は「r」→「i」と入力します。\nRキー（左手 人差し指）→ Iキー（右手 中指）の順に打ちます。',
+      fingerHint: '左手 人差し指 → 右手 中指',
+      handKeys: ['r', 'i'],
       keyboardKeys: ['r', 'i'],
     },
   ],
@@ -522,9 +533,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u9-l03': [
     {
       title: '「る」の打ち方',
-      body: '「る」は「r」→「u」と入力します。\nRキー（左手 人差し指）の後にUキー（右手 人差し指）を打ちます。',
-      fingerHint: '左手 人差し指',
-      handKey: 'r',
+      body: '「る」は「r」→「u」と入力します。\nRキー（左手 人差し指）→ Uキー（右手 人差し指）の順に打ちます。',
+      fingerHint: '左手 人差し指 → 右手 人差し指',
+      handKeys: ['r', 'u'],
       keyboardKeys: ['r', 'u'],
     },
   ],
@@ -532,9 +543,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u9-l04': [
     {
       title: '「れ」の打ち方',
-      body: '「れ」は「r」→「e」と入力します。\nRキー（左手 人差し指）の後にEキー（左手 中指）を打ちます。',
-      fingerHint: '左手 人差し指',
-      handKey: 'r',
+      body: '「れ」は「r」→「e」と入力します。\nRキー（左手 人差し指）→ Eキー（左手 中指）の順に打ちます。',
+      fingerHint: '左手 人差し指 → 左手 中指',
+      handKeys: ['r', 'e'],
       keyboardKeys: ['r', 'e'],
     },
   ],
@@ -542,9 +553,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u9-l05': [
     {
       title: '「ろ」の打ち方',
-      body: '「ろ」は「r」→「o」と入力します。\nRキー（左手 人差し指）の後にOキー（右手 薬指）を打ちます。',
-      fingerHint: '左手 人差し指',
-      handKey: 'r',
+      body: '「ろ」は「r」→「o」と入力します。\nRキー（左手 人差し指）→ Oキー（右手 薬指）の順に打ちます。',
+      fingerHint: '左手 人差し指 → 右手 薬指',
+      handKeys: ['r', 'o'],
       keyboardKeys: ['r', 'o'],
     },
   ],
@@ -556,13 +567,14 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
     {
       title: 'が行のキー：g + 母音',
       body: '濁音は清音の子音を変えて入力します。\nが行はか行の「k」を「g」に変えます。\nが → ga　ぎ → gi　ぐ → gu\nげ → ge　ご → go',
+      handKeys: ['g', 'a', 'i', 'u', 'e', 'o'],
       keyboardKeys: ['g', 'a', 'i', 'u', 'e', 'o'],
     },
     {
       title: 'Gキーの打ち方',
       body: 'Gキーは左手の人差し指で打ちます。\nFキーの右隣（中段）にあります。\n打った後はすぐFキーの位置に戻しましょう。',
       fingerHint: '左手 人差し指',
-      handKey: 'g',
+      handKeys: ['g'],
       keyboardKeys: ['g'],
     },
   ],
@@ -573,14 +585,15 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u11-l01': [
     {
       title: 'ざ行のキー：z + 母音',
-      body: 'ざ行はさ行の「s」を「z」に変えます。\nざ → za　じ → zi または ji\nず → zu　ぜ → ze　ぞ → zo\n「じ」は ji でも入力できます。',
+      body: 'ざ行はさ行の「s」を「z」に変えます。\nざ → za　じ → zi（または ji）\nず → zu　ぜ → ze　ぞ → zo\n「じ」は ji でも入力できます。',
+      handKeys: ['z', 'j', 'a', 'i', 'u', 'e', 'o'],
       keyboardKeys: ['z', 'j', 'a', 'i', 'u', 'e', 'o'],
     },
     {
       title: 'Zキーの打ち方',
       body: 'Zキーは左手の小指で打ちます。\n一番下の行（底段）の一番左にあります。',
       fingerHint: '左手 小指',
-      handKey: 'z',
+      handKeys: ['z'],
       keyboardKeys: ['z'],
     },
   ],
@@ -592,13 +605,14 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
     {
       title: 'だ行のキー：d + 母音',
       body: 'だ行はた行の「t」を「d」に変えます。\nだ → da　ぢ → di　づ → du\nで → de　ど → do',
+      handKeys: ['d', 'a', 'i', 'u', 'e', 'o'],
       keyboardKeys: ['d', 'a', 'i', 'u', 'e', 'o'],
     },
     {
       title: 'Dキーの打ち方',
       body: 'Dキーは左手の中指で打ちます。\nホームポジションのキーです。\nSキーとFキーの間にあります。',
       fingerHint: '左手 中指',
-      handKey: 'd',
+      handKeys: ['d'],
       keyboardKeys: ['d'],
     },
   ],
@@ -610,13 +624,14 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
     {
       title: 'ば行のキー：b + 母音',
       body: 'ば行はは行の「h」を「b」に変えます。\nば → ba　び → bi　ぶ → bu\nべ → be　ぼ → bo',
+      handKeys: ['b', 'a', 'i', 'u', 'e', 'o'],
       keyboardKeys: ['b', 'a', 'i', 'u', 'e', 'o'],
     },
     {
       title: 'Bキーの打ち方',
       body: 'Bキーは左手の人差し指で打ちます。\n一番下の行（底段）にあります。\nFキーから下の行を目指して指を伸ばします。',
       fingerHint: '左手 人差し指',
-      handKey: 'b',
+      handKeys: ['b'],
       keyboardKeys: ['b'],
     },
   ],
@@ -628,13 +643,14 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
     {
       title: 'ぱ行のキー：p + 母音',
       body: 'ぱ行はは行の「h」を「p」に変えます。\nぱ → pa　ぴ → pi　ぷ → pu\nぺ → pe　ぽ → po',
+      handKeys: ['p', 'a', 'i', 'u', 'e', 'o'],
       keyboardKeys: ['p', 'a', 'i', 'u', 'e', 'o'],
     },
     {
       title: 'Pキーの打ち方',
       body: 'Pキーは右手の小指で打ちます。\n上段（トップ行）の一番右にあります。\n小指を少し伸ばして打ちます。',
       fingerHint: '右手 小指',
-      handKey: 'p',
+      handKeys: ['p'],
       keyboardKeys: ['p'],
     },
   ],
@@ -645,14 +661,15 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u15-l01': [
     {
       title: '拗音（ようおん）とは？',
-      body: '拗音は小さい「ゃ・ゅ・ょ」を含む音です。\n入力は「子音 + y + 母音」の形になります。\nきゃ → kya　きゅ → kyu　きょ → kyo\nしゃ → sha または sya',
+      body: '拗音は小さい「ゃ・ゅ・ょ」を含む音です。\nきゃ → kya　きゅ → kyu　きょ → kyo\nしゃ → sha（または sya）',
+      handKeys: ['k', 's', 'y', 'h', 'a', 'u', 'o'],
       keyboardKeys: ['k', 's', 'y', 'h', 'a', 'u', 'o'],
     },
     {
       title: 'Yキーの打ち方',
       body: 'Yキーは左手の人差し指で打ちます。\nTキーの右隣（上段）にあります。\nきゃ行・しゃ行で頻繁に使います。',
       fingerHint: '左手 人差し指',
-      handKey: 'y',
+      handKeys: ['y'],
       keyboardKeys: ['y'],
     },
   ],
@@ -663,14 +680,15 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u16-l01': [
     {
       title: 'ちゃ行・にゃ行のキー',
-      body: 'ちゃ → cha または tya\nちゅ → chu または tyu\nちょ → cho または tyo\nにゃ → nya　にゅ → nyu　にょ → nyo',
+      body: 'ちゃ → cha（または tya）\nちゅ → chu（または tyu）\nにゃ → nya　にゅ → nyu　にょ → nyo',
+      handKeys: ['c', 't', 'n', 'y', 'h', 'a', 'u', 'o'],
       keyboardKeys: ['c', 't', 'n', 'y', 'h', 'a', 'u', 'o'],
     },
     {
       title: 'Cキーの打ち方',
       body: 'Cキーは左手の中指で打ちます。\n一番下の行（底段）にあります。\nDキーから下を目指して指を伸ばします。',
       fingerHint: '左手 中指',
-      handKey: 'c',
+      handKeys: ['c'],
       keyboardKeys: ['c'],
     },
   ],
@@ -682,13 +700,14 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
     {
       title: 'ひゃ・みゃ・りゃ行のキー',
       body: 'ひゃ → hya　ひゅ → hyu　ひょ → hyo\nみゃ → mya　みゅ → myu　みょ → myo\nりゃ → rya　りゅ → ryu　りょ → ryo',
+      handKeys: ['h', 'm', 'r', 'y', 'a', 'u', 'o'],
       keyboardKeys: ['h', 'm', 'r', 'y', 'a', 'u', 'o'],
     },
     {
-      title: 'h/m/r + y の組み合わせ',
-      body: 'どれも「子音 + y + 母音」のパターンです。\nHキーは右手人差し指、Mキーは右手人差し指、\nRキーは左手人差し指、Yキーは左手人差し指です。',
-      fingerHint: '右手 人差し指 / 左手 人差し指',
-      handKey: 'h',
+      title: 'h / m / r + y の組み合わせ',
+      body: 'どれも「子音 + y + 母音」のパターンです。\nHキー（右手 人差し指）\nMキー（右手 人差し指）\nRキー（左手 人差し指）',
+      fingerHint: '右手 / 左手 人差し指 → Yキー',
+      handKeys: ['h', 'm', 'r', 'y'],
       keyboardKeys: ['h', 'm', 'r', 'y'],
     },
   ],
@@ -699,14 +718,15 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u18-l01': [
     {
       title: 'ぎゃ・じゃ・びゃ・ぴゃ行のキー',
-      body: 'ぎゃ → gya　じゃ → jya または ja\nびゃ → bya　ぴゃ → pya\nどれも濁音・半濁音の拗音です。',
+      body: 'ぎゃ → gya　じゃ → jya（または ja）\nびゃ → bya　ぴゃ → pya\nどれも濁音・半濁音の拗音です。',
+      handKeys: ['g', 'j', 'b', 'p', 'y', 'a', 'u', 'o'],
       keyboardKeys: ['g', 'j', 'b', 'p', 'y', 'a', 'u', 'o'],
     },
     {
       title: '濁音拗音の組み合わせ',
-      body: 'ぎゃ → g + y + a\nじゃ → j + a（またはj + y + a）\nびゃ → b + y + a\nぴゃ → p + y + a',
-      fingerHint: '左手・右手 人差し指',
-      handKey: 'g',
+      body: 'ぎゃ → g + y + a\nじゃ → j + a（または j + y + a）\nびゃ → b + y + a\nぴゃ → p + y + a',
+      fingerHint: '左手・右手 人差し指 → Yキー',
+      handKeys: ['g', 'j', 'b', 'p', 'y'],
       keyboardKeys: ['g', 'j', 'b', 'p', 'y'],
     },
   ],
@@ -718,13 +738,14 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
     {
       title: '句読点・記号のキー',
       body: '日本語でよく使う記号の入力方法を練習します。\n。（句点）→ . （ピリオドキー）\n、（読点）→ , （カンマキー）\nー（長音符）→ - （ハイフンキー）',
+      handKeys: ['.', ',', '-'],
       keyboardKeys: ['.', ',', '-'],
     },
     {
       title: '句点「。」の打ち方',
       body: '「。」は「.」（ピリオドキー）で入力します。\n右手の薬指で打ちます。\n一番下の行（底段）にあります。',
       fingerHint: '右手 薬指',
-      handKey: '.',
+      handKeys: ['.'],
       keyboardKeys: ['.'],
     },
   ],
@@ -734,7 +755,7 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
       title: '読点「、」の打ち方',
       body: '「、」は「,」（カンマキー）で入力します。\n右手の中指で打ちます。\n一番下の行（底段）の「.」キーの左にあります。',
       fingerHint: '右手 中指',
-      handKey: ',',
+      handKeys: [','],
       keyboardKeys: [','],
     },
   ],
@@ -742,9 +763,9 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
   'u19-l03': [
     {
       title: '長音符「ー」の打ち方',
-      body: '「ー」は「-」（ハイフンキー）で入力します。\n右手の小指で打ちます。\n上段の一番右端付近にあります。',
+      body: '「ー」は「-」（ハイフンキー）で入力します。\n右手の小指で打ちます。\n上段の右端付近にあります。',
       fingerHint: '右手 小指',
-      handKey: '-',
+      handKeys: ['-'],
       keyboardKeys: ['-'],
     },
   ],
@@ -756,6 +777,7 @@ export const TUTORIAL_SLIDES: Record<string, TutorialSlide[]> = {
     {
       title: '総合練習',
       body: 'これまで学んだすべての文字を使った総合練習です。実際の日本語の文章を通じて、スムーズなタイピングを目指しましょう！',
+      handKeys: ['a', 's', 'd', 'f', 'j', 'k', 'l', ';'],
       keyboardKeys: ['a', 's', 'd', 'f', 'j', 'k', 'l', ';'],
     },
   ],

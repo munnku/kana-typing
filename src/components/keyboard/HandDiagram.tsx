@@ -5,6 +5,8 @@ import { KEY_INFO } from '@/data/keyboardLayout';
 
 interface HandDiagramProps {
   activeKey: string | null;
+  /** 複数キーをまとめてハイライトする場合に使用（activeKey より優先） */
+  activeKeys?: string[];
   large?: boolean;
 }
 
@@ -31,9 +33,11 @@ const RIGHT_FINGER_POSITIONS = [
   { x: 88, y: 30, w: 18, h: 60 },  // pinky  (rightmost)
 ];
 
-function HandSVG({ side, activeFinger, className }: {
+function HandSVG({ side, activeFinger, activeFingers, className }: {
   side: 'left' | 'right';
   activeFinger: FingerName | null;
+  /** 複数指ハイライト */
+  activeFingers?: Set<FingerName>;
   className?: string;
 }) {
   const fingers = side === 'left' ? LEFT_FINGERS : RIGHT_FINGERS;
@@ -49,7 +53,7 @@ function HandSVG({ side, activeFinger, className }: {
       <rect x="8" y="85" width="100" height="20" rx="4" fill="#e5e7eb" />
       {fingers.map((finger, i) => {
         const pos = positions[i];
-        const isActive = finger === activeFinger;
+        const isActive = activeFingers ? activeFingers.has(finger) : finger === activeFinger;
         const color = isActive ? FINGER_COLORS[finger] : '#d1d5db';
         return (
           <rect
@@ -75,7 +79,28 @@ function HandSVG({ side, activeFinger, className }: {
   );
 }
 
-export function HandDiagram({ activeKey, large }: HandDiagramProps) {
+export function HandDiagram({ activeKey, activeKeys, large }: HandDiagramProps) {
+  // activeKeys が指定されている場合は複数ハイライトモード
+  if (activeKeys && activeKeys.length > 0) {
+    const leftFingers = new Set<FingerName>();
+    const rightFingers = new Set<FingerName>();
+    for (const k of activeKeys) {
+      const info = KEY_INFO[k];
+      if (!info) continue;
+      if (info.hand === 'left') leftFingers.add(info.finger);
+      else rightFingers.add(info.finger);
+    }
+    const svgClass = large ? 'w-[180px] max-w-[32vw] h-auto' : undefined;
+    return (
+      <div className={`flex flex-col items-center ${large ? 'gap-3' : 'gap-2'}`}>
+        <div className={`flex items-end ${large ? 'gap-6' : 'gap-8'}`}>
+          <HandSVG side="left" activeFinger={null} activeFingers={leftFingers} className={svgClass} />
+          <HandSVG side="right" activeFinger={null} activeFingers={rightFingers} className={svgClass} />
+        </div>
+      </div>
+    );
+  }
+
   if (!activeKey) return null;
 
   const keyInfo = KEY_INFO[activeKey];
@@ -86,17 +111,17 @@ export function HandDiagram({ activeKey, large }: HandDiagramProps) {
 
   if (large) {
     return (
-      <div className="flex flex-col items-center justify-center gap-4">
-        <div className="flex gap-8 items-end justify-center">
+      <div className="flex flex-col items-center justify-center gap-3">
+        <div className="flex gap-6 items-end justify-center">
           <HandSVG
             side="left"
             activeFinger={isLeft ? activeFinger : null}
-            className="w-[210px] max-w-[38vw] h-auto"
+            className="w-[180px] max-w-[32vw] h-auto"
           />
           <HandSVG
             side="right"
             activeFinger={!isLeft ? activeFinger : null}
-            className="w-[210px] max-w-[38vw] h-auto"
+            className="w-[180px] max-w-[32vw] h-auto"
           />
         </div>
         <div className="flex items-center gap-3 justify-center">

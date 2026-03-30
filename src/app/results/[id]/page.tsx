@@ -7,6 +7,7 @@ import { LESSONS_BY_ID, getNextLesson } from '@/data/lessons';
 import { loadProgress, getLessonProgress, saveProgress } from '@/lib/storage';
 import { evaluateBadges } from '@/lib/badges';
 import { formatKpm, formatAccuracy, formatDuration } from '@/lib/metrics';
+import { STAR_THRESHOLDS_BY_UNIT } from '@/lib/constants';
 import dynamic from 'next/dynamic';
 import { StarRating } from '@/components/results/StarRating';
 import { BadgeToast } from '@/components/results/BadgeToast';
@@ -18,6 +19,30 @@ const KpmChart = dynamic(
   () => import('@/components/results/KpmChart').then(m => m.KpmChart),
   { ssr: false, loading: () => <div className="h-40 flex items-center justify-center"><p className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant/40">読み込み中...</p></div> }
 );
+
+function getStarFeedback(stars: 0 | 1 | 2 | 3, result: { kpm: number; accuracy: number }, unitIndex: number): string {
+  if (stars === 3) return '完璧です！スピードも正確さも申し分なし！';
+
+  const thresholds = STAR_THRESHOLDS_BY_UNIT[unitIndex] ?? STAR_THRESHOLDS_BY_UNIT[0];
+  const nextThreshold = stars === 0 ? thresholds.one : stars === 1 ? thresholds.two : thresholds.three;
+
+  const needsKpm = result.kpm < nextThreshold.kpm;
+  const needsAccuracy = result.accuracy < nextThreshold.accuracy;
+
+  const nextStars = stars + 1;
+  const prefix = stars === 0 ? '星1つ獲得には' : `星${nextStars}つ獲得には`;
+
+  if (needsKpm && needsAccuracy) {
+    return `${prefix}、タイプ速度（現在: ${result.kpm.toFixed(1)} 字/秒 → 目標: ${nextThreshold.kpm} 字/秒以上）と正確率（現在: ${result.accuracy}% → 目標: ${nextThreshold.accuracy}%以上）の両方を上げましょう。`;
+  }
+  if (needsKpm) {
+    return `${prefix}、タイプ速度を上げましょう。現在: ${result.kpm.toFixed(1)} 字/秒 → 目標: ${nextThreshold.kpm} 字/秒以上。`;
+  }
+  if (needsAccuracy) {
+    return `${prefix}、正確率を上げましょう。現在: ${result.accuracy}% → 目標: ${nextThreshold.accuracy}%以上。`;
+  }
+  return stars === 0 ? 'もう一度挑戦してみましょう！' : 'もう一度挑戦してさらに上を目指しましょう！';
+}
 
 function playResultSound(stars: 0 | 1 | 2 | 3) {
   if (typeof window === 'undefined') return;
@@ -204,18 +229,32 @@ export default function ResultsPage() {
         </div>
 
         {/* Stars */}
-        <div className="glass-card rounded-lg p-6 border border-[#464555]/5 flex items-center justify-between">
-          <div>
-            <p className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant mb-2">評価</p>
-            <StarRating stars={result.stars} />
-          </div>
-          <div className="text-right">
-            <p className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant mb-1">詳細</p>
-            <p className="font-body text-sm text-on-surface-variant">
-              正解 {result.correctChars}文字 / ミス {result.errorCount}回
-            </p>
-          </div>
-        </div>
+        {(() => {
+          const unitIndex = parseInt(lesson.unitId.replace('unit-', ''), 10);
+          const feedback = getStarFeedback(result.stars, result, unitIndex);
+          return (
+            <div className="glass-card rounded-lg p-6 border border-[#464555]/5 space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant mb-2">評価</p>
+                  <StarRating stars={result.stars} />
+                </div>
+                <div className="text-right">
+                  <p className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant mb-1">詳細</p>
+                  <p className="font-body text-sm text-on-surface-variant">
+                    正解 {result.correctChars}文字 / ミス {result.errorCount}回
+                  </p>
+                </div>
+              </div>
+              <div className={`flex items-start gap-2 px-3 py-2 rounded-lg text-sm ${result.stars === 3 ? 'bg-secondary/10 text-secondary' : 'bg-primary/5 text-on-surface-variant'}`}>
+                <span className="material-symbols-outlined text-base flex-shrink-0 mt-0.5" style={{ fontVariationSettings: "'FILL' 1" }}>
+                  {result.stars === 3 ? 'celebration' : 'tips_and_updates'}
+                </span>
+                <p className="font-body leading-relaxed">{feedback}</p>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* History chart */}
         {lessonProgress.history.length >= 2 && (
