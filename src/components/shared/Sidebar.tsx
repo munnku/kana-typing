@@ -59,8 +59,10 @@ export function Sidebar() {
       {/* Bottom: Info links + Settings */}
       <div className="mt-auto pt-6 border-t border-[#464555]/10 space-y-2">
         {[
-          { href: '/about',       icon: 'info',  label: 'このアプリについて' },
-          { href: '/how-to-use',  icon: 'help',  label: '使い方' },
+          { href: '/about',       icon: 'info',          label: 'このアプリについて' },
+          { href: '/how-to-use',  icon: 'help',          label: '使い方' },
+          { href: '/faq',         icon: 'quiz',          label: 'よくある質問' },
+          { href: '/contact',     icon: 'mail',          label: 'お問い合わせ' },
         ].map(item => {
           const isActive = pathname === item.href;
           return (
