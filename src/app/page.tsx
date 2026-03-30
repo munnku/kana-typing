@@ -40,9 +40,13 @@ const UNIT_TITLES: Record<string, string> = {
 };
 
 function buildChartData(progress: UserProgress) {
-  // Collect all history entries across lessons, sort by date
+  // Collect history entries from words/test lessons only (same filter as stats page)
+  const statsLessonIds = new Set(
+    LESSONS.filter(l => l.type === 'words' || l.type === 'test').map(l => l.id)
+  );
   const entries: { cps: number; accuracy: number; date: string }[] = [];
-  for (const lp of Object.values(progress.lessons)) {
+  for (const [id, lp] of Object.entries(progress.lessons)) {
+    if (!statsLessonIds.has(id)) continue;
     for (const h of lp.history) {
       entries.push({ cps: h.kpm, accuracy: h.accuracy, date: h.date });
     }
@@ -133,8 +137,13 @@ export default function HomePage() {
   const chartData = buildChartData(progress);
   const hasChartData = chartData.length >= 2;
 
-  // Aggregate stats from all history
-  const allHistory = Object.values(progress.lessons).flatMap(l => l.history);
+  // Aggregate stats from words/test lessons only
+  const statsLessonIds = new Set(
+    LESSONS.filter(l => l.type === 'words' || l.type === 'test').map(l => l.id)
+  );
+  const allHistory = Object.entries(progress.lessons)
+    .filter(([id]) => statsLessonIds.has(id))
+    .flatMap(([, l]) => l.history);
   const avgCps = allHistory.length > 0
     ? (allHistory.reduce((s, h) => s + h.kpm, 0) / allHistory.length).toFixed(1)
     : '—';

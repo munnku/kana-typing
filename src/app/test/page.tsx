@@ -161,7 +161,7 @@ export default function TestPage() {
 
     if (match === 'complete') {
       onKeyPress(true);
-      setCorrectChars(c => c + 1);
+      setCorrectChars(c => c + newPartial.length);
       let nextCursor = cursor + 1;
       while (nextCursor < chars.length && chars[nextCursor].kana === ' ') nextCursor++;
       setChars(prev => prev.map((c, i) => {
