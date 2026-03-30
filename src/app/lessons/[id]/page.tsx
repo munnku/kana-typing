@@ -2,7 +2,7 @@
 import { useEffect, useCallback, useMemo, useState, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
-import { LESSONS_BY_ID, getNextLesson, getLessonsByUnit } from '@/data/lessons';
+import { LESSONS_BY_ID, getNextLesson } from '@/data/lessons';
 import { useTypingEngine } from '@/hooks/useTypingEngine';
 import { useTimer } from '@/hooks/useTimer';
 import { useAudio } from '@/hooks/useAudio';
@@ -64,14 +64,9 @@ function LessonRunner({ lesson }: { lesson: Lesson }) {
 
   useBgmStop();
 
-  // チュートリアルスライド: 各ユニットの最初のレッスンかどうか判定
-  const isFirstLessonOfUnit = useMemo(() => {
-    const unitLessons = getLessonsByUnit(lesson.unitId);
-    return unitLessons.length > 0 && unitLessons[0].id === lesson.id;
-  }, [lesson]);
-
-  const unitSlides = isFirstLessonOfUnit ? (TUTORIAL_SLIDES[lesson.unitId] ?? null) : null;
-  const [showTutorial, setShowTutorial] = useState(!!unitSlides);
+  // チュートリアルスライド: レッスンIDをキーに取得
+  const lessonSlides = TUTORIAL_SLIDES[lesson.id] ?? null;
+  const [showTutorial, setShowTutorial] = useState(!!lessonSlides);
   const {
     state, kpm, accuracy, stars, xpEarned, correctChars,
     nextExpectedKeys, handleKey, reset, tick,
@@ -175,8 +170,8 @@ function LessonRunner({ lesson }: { lesson: Lesson }) {
 
   return (
     <>
-      {showTutorial && unitSlides && (
-        <TutorialSlideshow slides={unitSlides} onComplete={() => setShowTutorial(false)} />
+      {showTutorial && lessonSlides && (
+        <TutorialSlideshow slides={lessonSlides} onComplete={() => setShowTutorial(false)} />
       )}
       <InputCapture onKey={handleKeyWithSound} active={state.status !== 'complete' && !showTutorial} />
       <TypingScreen

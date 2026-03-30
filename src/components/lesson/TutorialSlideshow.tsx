@@ -28,11 +28,12 @@ export function TutorialSlideshow({ slides, onComplete }: TutorialSlideshowProps
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Enter') { e.preventDefault(); handleNext(); }
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleNext(); }
+      if (e.key === 'Escape') { e.preventDefault(); onComplete(); }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [handleNext]);
+  }, [handleNext, onComplete]);
 
   // 表示するビジュアルを決定：handKey があれば手の図、keyboardKeys があればキーボード図
   const showHand = !!slide.handKey;
@@ -57,10 +58,13 @@ export function TutorialSlideshow({ slides, onComplete }: TutorialSlideshowProps
           </div>
           <button
             onClick={onComplete}
-            className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1"
+            className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors flex flex-col items-center gap-0.5"
           >
-            スキップ
-            <span className="material-symbols-outlined text-sm">skip_next</span>
+            <div className="flex items-center gap-1">
+              スキップ
+              <span className="material-symbols-outlined text-sm">skip_next</span>
+            </div>
+            <span className="text-[9px] text-on-surface-variant/40 uppercase tracking-widest">ESC</span>
           </button>
         </div>
 
@@ -140,7 +144,7 @@ export function TutorialSlideshow({ slides, onComplete }: TutorialSlideshowProps
         </div>
 
         <p className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant/40 text-center -mt-1">
-          Enter キーでも次へ進めます
+          Space / Enter キーで次へ進めます
         </p>
       </div>
     </div>
