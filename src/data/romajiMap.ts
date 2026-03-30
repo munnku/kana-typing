@@ -133,9 +133,36 @@ export const KANA_ROMAJI_MAP: Record<string, string[]> = {
   // space
   ' ': [' '],
   // Home position single-key practice (Unit 0)
-  'j': ['j'],
+  'a': ['a'],
+  's': ['s'],
+  'd': ['d'],
   'f': ['f'],
+  'j': ['j'],
+  'k': ['k'],
+  'l': ['l'],
+  ';': [';'],
 };
+
+// 「ん」の後に続く文字が母音・y・nで始まる場合は nn が必要、それ以外は n 単体で可
+function getNNRomaji(text: string, currentIndex: number): string[] {
+  const nextIndex = currentIndex + 1;
+  if (nextIndex >= text.length) {
+    // 末尾のん: n 単体でも可
+    return ['nn', 'n'];
+  }
+  // 次の2文字kanaを確認
+  const nextTwoChar = nextIndex + 1 < text.length ? text[nextIndex] + text[nextIndex + 1] : null;
+  const nextRomaji = (nextTwoChar && KANA_ROMAJI_MAP[nextTwoChar])
+    ? KANA_ROMAJI_MAP[nextTwoChar][0]
+    : (KANA_ROMAJI_MAP[text[nextIndex]]?.[0] ?? '');
+  const firstChar = nextRomaji[0];
+  // 母音・y・n で始まる場合は nn が必須（n だけだと次の文字と合体してしまう）
+  if (firstChar === 'a' || firstChar === 'i' || firstChar === 'u' || firstChar === 'e' || firstChar === 'o' || firstChar === 'y' || firstChar === 'n') {
+    return ['nn'];
+  }
+  // スペースや文末の場合も n 単体で可
+  return ['nn', 'n'];
+}
 
 // Convert a hiragana string to an array of KanaUnits
 export function textToKanaUnits(text: string): KanaUnit[] {
@@ -155,6 +182,9 @@ export function textToKanaUnits(text: string): KanaUnit[] {
     const char = text[i];
     if (char === ' ') {
       units.push({ kana: ' ', romaji: [' '], displayRomaji: ' ' });
+    } else if (char === 'ん') {
+      const romaji = getNNRomaji(text, i);
+      units.push({ kana: 'ん', romaji, displayRomaji: 'n' });
     } else if (char === 'っ') {
       // っ before next kana: double the first consonant
       // Look ahead for next char

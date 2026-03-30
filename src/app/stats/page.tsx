@@ -30,21 +30,33 @@ export default function StatsPage() {
   const totalLessons = LESSONS.length;
   const completedLessons = Object.values(progress.lessons).filter(l => l.completed).length;
 
+  // 統計対象: 単語練習・テストのみ（単文字・Unit0・記号の練習レッスンは除外）
+  const statsLessonIds = new Set(
+    LESSONS.filter(l => l.type === 'words' || l.type === 'test').map(l => l.id)
+  );
+
   // タイプ速度 stats (bestKpm field stores CPS)
-  const allCps = Object.values(progress.lessons).map(l => l.bestKpm).filter(k => k > 0);
+  const allCps = Object.entries(progress.lessons)
+    .filter(([id]) => statsLessonIds.has(id))
+    .map(([, l]) => l.bestKpm)
+    .filter(k => k > 0);
   const peakCps = allCps.length > 0 ? Math.max(...allCps).toFixed(1) : '0.0';
   const avgCps = allCps.length > 0
     ? (allCps.reduce((a, b) => a + b, 0) / allCps.length).toFixed(1)
     : '0.0';
 
-  const allAccuracies = Object.values(progress.lessons).map(l => l.bestAccuracy).filter(a => a > 0);
+  const allAccuracies = Object.entries(progress.lessons)
+    .filter(([id]) => statsLessonIds.has(id))
+    .map(([, l]) => l.bestAccuracy)
+    .filter(a => a > 0);
   const avgAccuracy = allAccuracies.length > 0
     ? (allAccuracies.reduce((a, b) => a + b, 0) / allAccuracies.length).toFixed(1)
     : '0.0';
 
-  // All history entries sorted by date for chart
-  const allHistory = Object.values(progress.lessons)
-    .flatMap(l => l.history)
+  // All history entries sorted by date for chart (統計対象レッスンのみ)
+  const allHistory = Object.entries(progress.lessons)
+    .filter(([id]) => statsLessonIds.has(id))
+    .flatMap(([, l]) => l.history)
     .sort((a, b) => a.date.localeCompare(b.date))
     .slice(-20);
 
