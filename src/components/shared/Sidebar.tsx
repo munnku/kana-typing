@@ -17,8 +17,10 @@ export function Sidebar() {
     <aside className="fixed left-0 top-0 h-full w-20 hover:w-64 transition-all duration-300 z-50 border-r border-[#464555]/15 bg-[#131b2e] flex flex-col py-8 px-4 overflow-hidden group shadow-sidebar">
       {/* Logo */}
       <div className="flex items-center gap-4 mb-10 overflow-hidden">
-        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-primary-container flex items-center justify-center flex-shrink-0 shadow-glow overflow-hidden">
-          <span className="material-symbols-outlined text-on-primary" style={{ fontSize: '26px', fontVariationSettings: "'FILL' 1", display: 'block', lineHeight: '1' }}>bolt</span>
+        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-primary-container flex items-center justify-center flex-shrink-0 shadow-glow">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7 text-on-primary">
+            <path d="M13 2L4.09 12.97H11L10 22L20.91 11.03H14L13 2Z"/>
+          </svg>
         </div>
         <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap overflow-hidden">
           <h1 className="text-xl font-bold tracking-tighter text-primary font-headline">かなタイピング</h1>

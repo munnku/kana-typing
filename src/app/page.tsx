@@ -223,7 +223,7 @@ export default function HomePage() {
         <div className="glass-card rounded-lg border border-[#464555]/10 p-10 text-center">
           <span className="material-symbols-outlined text-5xl text-on-surface-variant/20 mb-4 block">analytics</span>
           <p className="font-headline font-bold text-on-surface mb-1">まだデータがありません</p>
-          <p className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">レッスンを2回以上完了するとグラフが表示されます</p>
+          <p className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant/40">データがまだありません</p>
         </div>
       )}
 
