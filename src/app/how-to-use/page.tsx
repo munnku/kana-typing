@@ -1,7 +1,10 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: '使い方ガイド | かなタイピング',
+  title: '使い方ガイド',
+  description: 'かなタイピングの使い方を解説。レッスンの進め方、ローマ字入力の基本、CPS・KPMなどスコアの見方、タッチタイピング上達のコツをご紹介します。',
+  keywords: ['タイピング練習 使い方', 'ローマ字入力 練習', 'タッチタイピング コツ', 'CPS KPM 意味', 'ひらがな ローマ字 変換'],
+  alternates: { canonical: 'https://kana-typing.vercel.app/how-to-use' },
 };
 
 const STEPS = [

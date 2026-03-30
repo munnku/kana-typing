@@ -2,7 +2,10 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'このアプリについて | かなタイピング',
+  title: 'このアプリについて',
+  description: 'かなタイピングは無料の日本語ひらがなタイピング練習アプリです。21ユニットの段階的カリキュラム、指ガイド、バッジシステムで楽しく上達できます。会員登録不要。',
+  keywords: ['かなタイピング', '日本語タイピング', 'ひらがな練習', '無料タイピング', '指ガイド'],
+  alternates: { canonical: 'https://kana-typing.vercel.app/about' },
 };
 
 const FEATURES = [

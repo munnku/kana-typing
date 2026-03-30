@@ -10,9 +10,38 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const plusJakartaSans = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-headline', weight: ['400','500','600','700','800'] });
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-label', weight: ['400','500','600','700'] });
 
+const siteUrl = 'https://kana-typing.vercel.app';
+
 export const metadata: Metadata = {
-  title: 'かなタイピング — 日本語タイピング練習',
-  description: '日本語ひらがなタイピング練習アプリ',
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: 'かなタイピング — 無料の日本語ひらがなタイピング練習',
+    template: '%s | かなタイピング',
+  },
+  description: '無料で使える日本語ひらがなタイピング練習アプリ。ホームポジションから始まり、あ行・か行・濁音・拗音まで21ユニットで段階的に学べます。指ガイド付き・会員登録不要。',
+  keywords: ['タイピング練習', 'ひらがな', '日本語タイピング', 'ローマ字入力', 'タッチタイピング', '初心者', 'キーボード練習', '無料', 'かなタイピング'],
+  authors: [{ name: 'かなタイピング' }],
+  openGraph: {
+    type: 'website',
+    url: siteUrl,
+    siteName: 'かなタイピング',
+    title: 'かなタイピング — 無料の日本語ひらがなタイピング練習',
+    description: '無料で使える日本語ひらがなタイピング練習アプリ。21ユニットで段階的に学べます。指ガイド付き・会員登録不要。',
+    locale: 'ja_JP',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'かなタイピング — 無料の日本語ひらがなタイピング練習',
+    description: '無料で使える日本語ひらがなタイピング練習アプリ。21ユニットで段階的に学べます。',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
+  },
+  alternates: {
+    canonical: siteUrl,
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
