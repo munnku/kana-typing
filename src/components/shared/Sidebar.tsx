@@ -18,7 +18,7 @@ export function Sidebar() {
       {/* Logo */}
       <div className="flex items-center gap-4 mb-10 overflow-hidden">
         <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary-container flex items-center justify-center flex-shrink-0 shadow-glow overflow-hidden">
-          <span className="material-symbols-outlined text-on-primary" style={{ fontSize: '20px', fontVariationSettings: "'FILL' 1", display: 'block', lineHeight: '1' }}>bolt</span>
+          <span className="material-symbols-outlined text-on-primary" style={{ fontSize: '72px', fontVariationSettings: "'FILL' 1", display: 'block', lineHeight: '1' }}>bolt</span>
         </div>
         <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap overflow-hidden">
           <h1 className="text-xl font-bold tracking-tighter text-primary font-headline">かなタイピング</h1>
