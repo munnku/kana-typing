@@ -2,35 +2,42 @@
 import { useEffect, useRef } from 'react';
 
 interface AdUnitProps {
-  slot?: string;          // 将来のAdSense用（現在は未使用）
+  slot?: string;
   format?: 'vertical';
   className?: string;
 }
 
+const SHINOBI_SCRIPT = 'https://adm.shinobi.jp/s/a50306ded28a8f8d06fc294e586e021e';
+
 /**
  * 忍者AdMax 広告ユニット
- * AdSense審査通過後はこのコンポーネントをAdSense版に切り替える
+ * srcdocを使ったiframe埋め込み方式（document.write対応）
  */
 export function AdUnit({ format = 'vertical', className = '' }: AdUnitProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const initialized = useRef(false);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
-    if (initialized.current || !containerRef.current) return;
-    initialized.current = true;
-
-    const script = document.createElement('script');
-    script.src = 'https://adm.shinobi.jp/s/a50306ded28a8f8d06fc294e586e021e';
-    script.async = true;
-    containerRef.current.appendChild(script);
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+    const doc = iframe.contentDocument || iframe.contentWindow?.document;
+    if (!doc) return;
+    doc.open();
+    doc.write(`<!DOCTYPE html><html><head><meta charset="utf-8"></head><body style="margin:0;padding:0;background:transparent;overflow:hidden;"><script src="${SHINOBI_SCRIPT}"><\/script></body></html>`);
+    doc.close();
   }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className={`flex items-center justify-center rounded-xl ${
-        format === 'vertical' ? 'w-[160px] min-h-[600px]' : 'w-full min-h-[90px]'
-      } ${className}`}
-    />
+    <div className={`flex items-center justify-center rounded-xl ${
+      format === 'vertical' ? 'w-[160px] min-h-[600px]' : 'w-full min-h-[90px]'
+    } ${className}`}>
+      <iframe
+        ref={iframeRef}
+        width={format === 'vertical' ? 160 : '100%'}
+        height={format === 'vertical' ? 600 : 90}
+        style={{ border: 'none' }}
+        scrolling="no"
+        title="advertisement"
+      />
+    </div>
   );
 }
