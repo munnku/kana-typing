@@ -16,17 +16,16 @@ export function Sidebar() {
   return (
     <aside className="fixed left-0 top-0 h-full w-20 hover:w-64 transition-all duration-300 z-50 border-r border-[#464555]/15 bg-[#131b2e] flex flex-col py-8 px-4 overflow-hidden group shadow-sidebar">
       {/* Logo */}
-      <div className="flex items-center gap-4 mb-10 overflow-hidden">
-        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-primary-container flex items-center justify-center flex-shrink-0 shadow-glow">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7 text-on-primary">
-            <path d="M13 2L4.09 12.97H11L10 22L20.91 11.03H14L13 2Z"/>
-          </svg>
-        </div>
-        <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap overflow-hidden">
-          <h1 className="text-xl font-bold tracking-tighter text-primary font-headline">かなタイピング</h1>
-          <p className="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">日本語練習</p>
-        </div>
-      </div>
+      <Link href="/" className="flex items-center mb-10 overflow-hidden h-10 flex-shrink-0">
+        {/* 折りたたみ時: "KX" */}
+        <span className="group-hover:opacity-0 group-hover:w-0 transition-all duration-300 font-headline font-black text-2xl tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent whitespace-nowrap flex-shrink-0 w-12">
+          KX
+        </span>
+        {/* 展開時: "KANAX" */}
+        <span className="opacity-0 group-hover:opacity-100 w-0 group-hover:w-auto transition-all duration-300 font-headline font-black text-2xl tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent whitespace-nowrap overflow-hidden">
+          KANAX
+        </span>
+      </Link>
 
       {/* Nav items */}
       <nav className="flex-1 space-y-2">

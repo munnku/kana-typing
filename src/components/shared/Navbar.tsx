@@ -22,7 +22,7 @@ export function Navbar() {
             <span className="text-white text-sm font-bold">か</span>
           </div>
           <span className="font-bold text-base text-slate-800 dark:text-slate-100 tracking-tight">
-            かなタイピング
+            KANAX
           </span>
         </Link>
 

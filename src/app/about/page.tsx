@@ -3,8 +3,8 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'このアプリについて',
-  description: 'かなタイピングは無料の日本語ひらがなタイピング練習アプリです。21ユニットの段階的カリキュラム、指ガイド、バッジシステムで楽しく上達できます。会員登録不要。',
-  keywords: ['かなタイピング', '日本語タイピング', 'ひらがな練習', '無料タイピング', '指ガイド'],
+  description: 'KANAXは無料の日本語ひらがなタイピング練習アプリです。21ユニットの段階的カリキュラム、指ガイド、バッジシステムで楽しく上達できます。会員登録不要。',
+  keywords: ['KANAX', '日本語タイピング', 'ひらがな練習', '無料タイピング', '指ガイド'],
   alternates: { canonical: 'https://kana-typing.vercel.app/about' },
 };
 
@@ -53,7 +53,7 @@ export default function AboutPage() {
           </h2>
           <div className="glass-card rounded-2xl border border-[#464555]/10 p-6 space-y-4">
             <p className="font-body text-sm text-on-surface leading-relaxed">
-              <strong className="text-primary">かなタイピング</strong>は、日本語ひらがなのタイピングを楽しく・効率よく練習できる無料のWebアプリです。
+              <strong className="text-primary">KANAX</strong>は、日本語ひらがなのタイピングを楽しく・効率よく練習できる無料のWebアプリです。
             </p>
             <div className="grid grid-cols-3 gap-4">
               <div className="bg-primary/5 rounded-xl p-4 text-center">
@@ -134,7 +134,7 @@ export default function AboutPage() {
           </h2>
           <div className="glass-card rounded-2xl border border-[#464555]/10 p-6 space-y-3">
             <p className="font-body text-sm text-on-surface leading-relaxed">
-              かなタイピングは個人開発のプロジェクトです。より多くの方が日本語タイピングを楽しく学べるよう、継続的に機能改善・コンテンツ追加を行っています。
+              KANAXは個人開発のプロジェクトです。より多くの方が日本語タイピングを楽しく学べるよう、継続的に機能改善・コンテンツ追加を行っています。
             </p>
             <div className="flex flex-wrap gap-2 mt-3">
               {['Next.js 14', 'TypeScript', 'Tailwind CSS', 'Recharts', 'App Router'].map((tech) => (

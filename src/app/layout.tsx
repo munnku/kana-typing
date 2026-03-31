@@ -15,23 +15,23 @@ const siteUrl = 'https://kana-typing.vercel.app';
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'かなタイピング — 無料の日本語ひらがなタイピング練習',
-    template: '%s | かなタイピング',
+    default: 'KANAX — 無料の日本語ひらがなタイピング練習',
+    template: '%s | KANAX',
   },
   description: '無料で使える日本語ひらがなタイピング練習アプリ。ホームポジションから始まり、あ行・か行・濁音・拗音まで21ユニットで段階的に学べます。指ガイド付き・会員登録不要。',
-  keywords: ['タイピング練習', 'ひらがな', '日本語タイピング', 'ローマ字入力', 'タッチタイピング', '初心者', 'キーボード練習', '無料', 'かなタイピング'],
-  authors: [{ name: 'かなタイピング' }],
+  keywords: ['タイピング練習', 'ひらがな', '日本語タイピング', 'ローマ字入力', 'タッチタイピング', '初心者', 'キーボード練習', '無料', 'KANAX'],
+  authors: [{ name: 'KANAX' }],
   openGraph: {
     type: 'website',
     url: siteUrl,
-    siteName: 'かなタイピング',
-    title: 'かなタイピング — 無料の日本語ひらがなタイピング練習',
+    siteName: 'KANAX',
+    title: 'KANAX — 無料の日本語ひらがなタイピング練習',
     description: '無料で使える日本語ひらがなタイピング練習アプリ。21ユニットで段階的に学べます。指ガイド付き・会員登録不要。',
     locale: 'ja_JP',
   },
   twitter: {
     card: 'summary',
-    title: 'かなタイピング — 無料の日本語ひらがなタイピング練習',
+    title: 'KANAX — 無料の日本語ひらがなタイピング練習',
     description: '無料で使える日本語ひらがなタイピング練習アプリ。21ユニットで段階的に学べます。',
   },
   robots: {

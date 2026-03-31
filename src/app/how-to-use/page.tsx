@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: '使い方ガイド',
-  description: 'かなタイピングの使い方を解説。レッスンの進め方、ローマ字入力の基本、CPS・KPMなどスコアの見方、タッチタイピング上達のコツをご紹介します。',
+  description: 'KANAXの使い方を解説。レッスンの進め方、ローマ字入力の基本、CPS・KPMなどスコアの見方、タッチタイピング上達のコツをご紹介します。',
   keywords: ['タイピング練習 使い方', 'ローマ字入力 練習', 'タッチタイピング コツ', 'CPS KPM 意味', 'ひらがな ローマ字 変換'],
   alternates: { canonical: 'https://kana-typing.vercel.app/how-to-use' },
 };
@@ -53,7 +53,7 @@ export default function HowToUsePage() {
               <h1 className="font-headline text-3xl font-extrabold tracking-tight text-on-surface">使い方ガイド</h1>
             </div>
           </div>
-          <p className="font-body text-sm text-on-surface-variant mt-2">かなタイピングの基本的な使い方と上達のコツを解説します。</p>
+          <p className="font-body text-sm text-on-surface-variant mt-2">KANAXの基本的な使い方と上達のコツを解説します。</p>
         </section>
 
         <hr className="border-[#464555]/15" />

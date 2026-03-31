@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'プライバシーポリシー | かなタイピング',
+  title: 'プライバシーポリシー | KANAX',
 };
 
 export default function PrivacyPage() {
@@ -36,7 +36,7 @@ export default function PrivacyPage() {
           </h2>
           <div className="glass-card rounded-2xl border border-[#464555]/10 p-6 space-y-3">
             <p className="font-body text-sm text-on-surface leading-relaxed">
-              かなタイピング（以下「当サイト」）は、ユーザーの個人情報保護を重要な責務と考え、適切な管理・保護に努めます。
+              KANAX（以下「当サイト」）は、ユーザーの個人情報保護を重要な責務と考え、適切な管理・保護に努めます。
             </p>
             <p className="font-body text-sm text-on-surface leading-relaxed">
               当サイトは、個人情報の保護に関する法律（個人情報保護法）および関連する法令・ガイドラインを遵守し、個人情報を適切に取り扱います。
