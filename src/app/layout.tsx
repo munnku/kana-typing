@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { Inter, Plus_Jakarta_Sans, Space_Grotesk } from 'next/font/google';
-import Script from 'next/script';
 import './globals.css';
 import { Sidebar } from '@/components/shared/Sidebar';
 import { ThemeProvider } from '@/components/shared/ThemeProvider';
@@ -56,13 +55,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block"
         />
+        {/* 忍者AdMax — SSRの初期HTMLに含めてクローラーに検出させる */}
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script type="text/javascript" src="https://adm.shinobi.jp/s/a50306ded28a8f8d06fc294e586e021e" />
       </head>
       <body className={`${inter.variable} ${plusJakartaSans.variable} ${spaceGrotesk.variable} font-body bg-surface text-on-surface min-h-screen`}>
-        {/* 忍者AdMax */}
-        <Script
-          src="https://adm.shinobi.jp/s/a50306ded28a8f8d06fc294e586e021e"
-          strategy="afterInteractive"
-        />
         <ThemeProvider>
           <div className="flex min-h-screen">
             <Sidebar />
